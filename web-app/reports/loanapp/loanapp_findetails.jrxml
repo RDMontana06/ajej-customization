@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-11-08T23:19:02 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loanapp_findetails" pageWidth="612" pageHeight="792" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="3f13d304-567e-4eb9-85b4-f357e9abdd7c">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LocalHost2"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="lnapp_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+	to_char(loan_application_id,'999999') as id,
+	financial_details_idx,
+	type_id, 
+	(select description from loan_financial_info_type where financial_detail.type_id = loan_financial_info_type.id) as type_desc,
+	description, 
+	case when type_id = 1 then value else null end as income_value,
+	case when type_id = 2 then value else null end as expense_value,
+	case when type_id = 3 then value else null end as others_value
+from financial_detail
+where trim(to_char(loan_application_id,'999999'))  = $P{lnapp_id} ]]>
+	</queryString>
+	<field name="id" class="java.lang.String"/>
+	<field name="financial_details_idx" class="java.lang.Integer"/>
+	<field name="type_id" class="java.lang.Integer"/>
+	<field name="type_desc" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="income_value" class="java.lang.Double"/>
+	<field name="expense_value" class="java.lang.Double"/>
+	<field name="others_value" class="java.lang.Double"/>
+	<variable name="sumIncome" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{income_value}]]></variableExpression>
+	</variable>
+	<variable name="sumExpense" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{expense_value}]]></variableExpression>
+	</variable>
+	<variable name="sumOthers" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{others_value}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="30" height="30" uuid="59663a35-a507-4d34-848f-36918d366846"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Idx. No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="0" width="270" height="30" uuid="e160bc4a-26ee-49c9-b9b8-9c461ad6714b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="88" height="30" uuid="0ca31f1e-5292-4d85-9881-157e532ba93a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Income]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="0" width="88" height="30" uuid="2f909845-6c54-4bf6-9c2b-7b8f94098112"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Expense]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="476" y="0" width="88" height="30" uuid="bb4b9ed8-6119-493c-8b06-ead4e839951a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Others]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="30" height="13" uuid="af24e2bb-14fc-41ff-afa0-dc00dc85141b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{financial_details_idx}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="30" y="0" width="270" height="13" uuid="8ede21d4-ab8e-4e07-9aaa-77d37daf3515">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{description}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="300" y="0" width="88" height="13" uuid="882dd6a4-7624-4b53-864e-2a1d088442c8"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{income_value}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="388" y="0" width="88" height="13" uuid="05074829-61aa-472e-80b2-ee6e76b9f419"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{expense_value}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="476" y="0" width="88" height="13" uuid="37b26a4a-a1d3-446a-98dc-e472fa946fb0"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{others_value}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="21" splitType="Stretch">
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="300" y="0" width="88" height="13" uuid="45fd16ae-03cd-49a6-91fd-f95b976e61b0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{sumIncome}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="388" y="0" width="88" height="13" uuid="03a0a223-4bbc-41c4-a873-e9eaf9de16a2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{sumExpense}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="476" y="0" width="88" height="13" uuid="038289bf-84d0-484d-a820-20d327b9102a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{sumOthers}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="13" uuid="0d5d9378-875c-4b1d-9934-2c2784404c66">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<noData>
+		<band height="40">
+			<staticText>
+				<reportElement x="0" y="0" width="612" height="40" uuid="f51c24ec-b587-443f-b6ba-98c31d528069"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[No Financial Data]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

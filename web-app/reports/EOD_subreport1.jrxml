@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-08-10T09:26:34 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EOD_subreport1" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="2932c4b3-7173-4a67-84b9-8aaa2b71cfa3">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MRB"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="branch" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select	
+	(select param_value from institution where id = 1) as institution,
+	A.account_no,
+	B.name as branch,
+	A.total_disbursement_amount as Amount_Disbursed,
+	A.total_net_proceeds as Net_Proceeds,
+	B.run_date
+from loan A
+inner join branch B on B.id = A.branch_id
+where A.status_id = 3 and (A.total_disbursement_amount <> A.total_net_proceeds) and (select param_value from institution where id = 1) = $P{branch}]]>
+	</queryString>
+	<field name="institution" class="java.lang.String"/>
+	<field name="account_no" class="java.lang.String"/>
+	<field name="branch" class="java.lang.String"/>
+	<field name="amount_disbursed" class="java.lang.Double"/>
+	<field name="net_proceeds" class="java.lang.Double"/>
+	<field name="run_date" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="13" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="143" height="13" uuid="05e65a67-e2cf-4ffe-ab0a-9176105a217e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Account Number]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="0" width="143" height="13" uuid="a518cf1a-93b7-45a8-a4e4-f9c8c796d8d3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Branch]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="286" y="0" width="143" height="13" uuid="2d140b5e-ec0a-4bcd-9af7-b12c04f9c8cf"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount Disbursed]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="429" y="0" width="143" height="13" uuid="d1cb0500-6264-4979-875b-cbc5d62b1e8a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Net Proceeds]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="1" width="143" height="13" uuid="d710f24d-bed7-4c0c-a0d9-4f34259b6420"/>
+				<textFieldExpression><![CDATA[$F{account_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="143" y="1" width="143" height="13" uuid="2464f8f6-0230-4939-b1a5-d6574826e508"/>
+				<textFieldExpression><![CDATA[$F{branch}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="286" y="1" width="143" height="13" uuid="0100db30-dc64-46e4-88d1-51668a3ec415"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{amount_disbursed}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="429" y="1" width="143" height="13" uuid="b6ca5532-cb93-4e52-a096-0d9e0f39277e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{net_proceeds}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

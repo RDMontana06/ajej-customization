@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.1.final using JasperReports Library version 6.2.1  -->
+<!-- 2016-12-20T15:01:45 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="printCheckDisbursement" pageWidth="700" pageHeight="842" columnWidth="660" leftMargin="20" rightMargin="20" topMargin="43" bottomMargin="20" uuid="e4611b2b-492e-4790-82ad-7f7c99c69dbd">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LOCAL DATA ADAPTER"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="inch"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="txnid" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+	(select param_value from institution where param_code ='GEN.10000') as institution,
+	cast(txn_date as date) as txn_date, 
+	txn_file.loan_acct_id as loan_id,
+	loan.account_no as acct_no,
+	loan.pn_no,
+	coalesce(customer.name1,'') ||' '|| coalesce(customer.name2,'') || ' ' || coalesce(customer.name3,'') as borrower,
+	loan.granted_amount as granted_amt,
+	--'**'||trim(to_char(loan.granted_amount,'9,999,999.99'))::text as granted_amt_txt,
+	--'**********'||upper(cash_words(cast(loan.granted_amount::text as money)))||'**********'::text as granted_amt_words,
+	
+	txn_file.txn_amt as amt_disb,
+	'**'||trim(to_char(txn_file.txn_amt,'9,999,999.99'))::text as amt_disb_txt,
+	--'**********'||upper(cash_words(cast(txn_file.txn_amt::text as money)))||'**********'::text as amt_disb_words,
+'**********'||substr(upper(cash_words(cast(txn_file.txn_amt::text as money))),1,position('DOLLARS AND ' in upper(cash_words(cast(txn_file.txn_amt::text as money))))+11)|| right(trim(to_char(txn_file.txn_amt,'99999.99')),2)||'/100'||'**********' as  amt_disb_words,
+	fn_get_ln_dedc_by_scheme_id(1, loan.id) as other_fees,
+	trim(to_char(fn_get_ln_dedc_by_scheme_id(1, loan.id),'9,999,999.99'))::text as other_fees_txt,
+	fn_get_ln_dedc_by_scheme_id(2, loan.id) as service_charge,
+	trim(to_char(fn_get_ln_dedc_by_scheme_id(2, loan.id),'9,999,999.99'))::text as service_charge_txt,
+	fn_get_ln_dedc_by_scheme_id(3, loan.id) as loan_fee,
+	trim(to_char(fn_get_ln_dedc_by_scheme_id(3, loan.id),'9,999,999.99'))::text as loan_fee_txt
+from txn_file
+	inner join loan on loan.id = txn_file.loan_acct_id
+	inner join customer on customer.id = loan.customer_id
+where 
+	trim(to_char(txn_file.id,'99999')) =   $P{txnid}]]>
+	</queryString>
+	<field name="institution" class="java.lang.String"/>
+	<field name="txn_date" class="java.sql.Date"/>
+	<field name="loan_id" class="java.lang.Long"/>
+	<field name="acct_no" class="java.lang.String"/>
+	<field name="pn_no" class="java.lang.String"/>
+	<field name="borrower" class="java.lang.String"/>
+	<field name="granted_amt" class="java.lang.Double"/>
+	<field name="amt_disb" class="java.lang.Double"/>
+	<field name="amt_disb_txt" class="java.lang.String"/>
+	<field name="amt_disb_words" class="java.lang.String"/>
+	<field name="other_fees" class="java.lang.Double"/>
+	<field name="other_fees_txt" class="java.lang.String"/>
+	<field name="service_charge" class="java.lang.Double"/>
+	<field name="service_charge_txt" class="java.lang.String"/>
+	<field name="loan_fee" class="java.lang.Double"/>
+	<field name="loan_fee_txt" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="667" splitType="Stretch">
+			<textField>
+				<reportElement positionType="Float" x="80" y="16" width="250" height="13" uuid="ebfad09c-d84e-4d8a-a459-4cb137823a57">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{borrower}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="569" y="32" width="90" height="13" uuid="2f504708-9e10-44ae-82d7-e5658b7d7de2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["$"+$F{amt_disb_txt}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="70" y="32" width="499" height="13" uuid="a5165de1-489f-4b66-b2fa-3cea2badd17a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{amt_disb_words}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="80" y="55" width="250" height="13" uuid="3dc4d833-afdd-41b7-b4f4-e7410ce1b926">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{borrower}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="130" y="260" width="290" height="13" uuid="8432a5d0-bcb6-4042-ac18-42ebda8beb47">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Loan disbursement for " + $F{pn_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="10" y="230" width="250" height="13" uuid="8230e6ed-d541-4792-9b28-c57c0606bcd1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{borrower}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement positionType="Float" x="569" y="-2" width="91" height="13" uuid="84b15f1b-3006-48ce-af89-cb42fa562bb2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{txn_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="130" y="275" width="290" height="13" uuid="b44e1fa3-9cc8-472d-b723-f25d383dc13e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Loan Fee"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="130" y="290" width="290" height="13" uuid="6417e67b-1848-4f0e-be96-8dfba41c49ff">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Charge for loan processing which is %1 of the principal"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement positionType="Float" x="453" y="260" width="90" height="13" uuid="6fcddb92-4d60-43b1-8c35-e3c2e7a9a485">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{granted_amt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement positionType="Float" x="453" y="275" width="90" height="13" uuid="9c233339-0188-4a82-af10-a6c232cb21ba">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{loan_fee}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement positionType="Float" x="453" y="290" width="90" height="13" uuid="31fe7a1c-e31b-49b8-b636-fbc20a141368">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{service_charge}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="130" y="306" width="290" height="13" uuid="f325a6ba-3c74-406b-b1e3-4e8670746cc6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Other Fees"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement positionType="Float" x="453" y="306" width="90" height="13" uuid="1712b88c-3246-409e-954d-080cefefdaca">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{other_fees}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="80" y="340" width="290" height="13" uuid="35af8051-bf31-49cd-b463-85c742d0fdf2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Loan disbursement for " + $F{pn_no}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement positionType="Float" x="453" y="340" width="90" height="13" uuid="4cfd6f43-8600-4745-88b4-71a7a33d1ebd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{amt_disb}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="130" y="569" width="290" height="13" uuid="5335d6f2-0fe1-4968-b53c-c16a45373b29">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Loan disbursement for " + $F{pn_no}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="10" y="539" width="250" height="13" uuid="a3d35733-44c5-4339-8c47-437ef5237c73">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{borrower}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement positionType="Float" x="390" y="539" width="130" height="13" uuid="41018891-8c40-4d02-8a9e-df759949189e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{txn_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="130" y="584" width="290" height="13" uuid="5d00567f-b9fe-427f-b440-b0d008a64935">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Loan Fee"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="130" y="599" width="290" height="13" uuid="ca709ea0-0408-42d9-b84b-4fc269071b59">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Charge for loan processing which is %1 of the principal"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement positionType="Float" x="453" y="569" width="90" height="13" uuid="8953cbf5-033c-4207-b253-721f64218be4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{granted_amt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement positionType="Float" x="453" y="584" width="90" height="13" uuid="67465216-a3e2-4aed-98a4-31e7f1a73f71">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{loan_fee}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement positionType="Float" x="453" y="599" width="90" height="13" uuid="b9631504-174b-4d72-8bca-851c52e40bec">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{service_charge}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="130" y="615" width="290" height="13" uuid="9b7d1908-9693-4a87-8cae-5110386c3a6d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Other Fees"]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement positionType="Float" x="453" y="615" width="90" height="13" uuid="771ab9e4-f1f5-45a4-9fad-ae5a76ff8819">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{other_fees}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="80" y="649" width="290" height="13" uuid="ad05fb72-ebdf-4ed7-bab2-15383246e7e6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Loan disbursement for " + $F{pn_no}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement positionType="Float" x="453" y="649" width="90" height="13" uuid="6a0d8d2f-439c-40eb-8cbb-a89e6c08c9ae">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{amt_disb}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement positionType="Float" x="395" y="235" width="130" height="13" uuid="e60a761d-caa4-48a9-9680-ca80045f2d05">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{txn_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

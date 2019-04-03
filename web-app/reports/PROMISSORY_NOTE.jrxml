@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.1.final using JasperReports Library version 6.2.1  -->
+<!-- 2016-06-11T10:33:43 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Prommisory" pageWidth="612" pageHeight="1008" whenNoDataType="NoDataSection" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7d31760f-00f7-4eb7-b751-1791510d7488">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LOCAL DATABASE ADAPTER"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="ireport.jasperserver.url" value="/MRB_CUSTOMIZE_REPORT/DAILY_REPORT/Prommisory_files/PROMISSORY_NOTE"/>
+	<property name="ireport.jasperserver.user" value="jasperadmin"/>
+	<property name="ireport.jasperserver.reportUnit" value="/MRB_CUSTOMIZE_REPORT/UAT_REPORT/Prommisory"/>
+	<property name="ireport.jasperserver.report.resource" value="/MRB_CUSTOMIZE_REPORT/DAILY_REPORT/Prommisory_files/main_jrxml"/>
+	<parameter name="resourcepath" class="java.lang.String"/>
+	<parameter name="id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select 
+	--(case when I2.sequence_no != I1.sequence_no then I1.sequence_no else I2.sequence_no end) as "SAMPLE4",
+	--case when I1.sequence_no is null then I2.sequence_no else I1.sequence_no end as "SEC3",
+	
+	A.account_no as "PN No.",
+	A.opening_date as "DATE GRANTED",
+	A.maturity_date as "MATURITY DATE",
+	C.name as "BRANCH NAME",
+	C.address as "ADDRESS",
+	A.granted_amount as "AMOUNT",
+	 replace(cash_words(cast(A.granted_amount as NUMERIC)::MONEY),'dollars', 'PESOS')  as "AMW",
+	 replace(replace(cash_words(cast(A.interest_rate as numeric)::money),' dollars',''),' cents','') || ' percent' as "RATE IN WORDS",
+	A.interest_rate as "RATE",
+	M.term as "TERM",
+	upper(H.description) as "FREQ",
+	I.total_installment_amount as "Monthly Amortization",
+	D.display_name as "BORROWER",
+	E.description as "COL DESCRIPTION",
+	G.customer_id as "WITNESS"
+from loan A
+	left join branch C on A.branch_id = C.ID
+	left join customer D on A.customer_id = D.id
+	left join collateral E on A.status_id = E.status_id
+	left join loan_application_comaker G on A.id = G.id
+	left join loan_loan_installment N on N.loan_loan_installments_id = A.id
+	left join loan_installment I on N.loan_installment_id = I.id
+	left join loan_application M on A.loan_application_id = M.id
+	left join loan_installment_freq H on A.frequency_id = H.id
+where A.id = $P{id} and ((I.sequence_no = 1))
+order by C.name, D.display_name]]>
+	</queryString>
+	<field name="PN No." class="java.lang.String"/>
+	<field name="DATE GRANTED" class="java.sql.Timestamp"/>
+	<field name="MATURITY DATE" class="java.sql.Timestamp"/>
+	<field name="BRANCH NAME" class="java.lang.String"/>
+	<field name="ADDRESS" class="java.lang.String"/>
+	<field name="AMOUNT" class="java.lang.Double"/>
+	<field name="AMW" class="java.lang.String"/>
+	<field name="RATE IN WORDS" class="java.lang.String"/>
+	<field name="RATE" class="java.lang.Double"/>
+	<field name="TERM" class="java.lang.Integer"/>
+	<field name="FREQ" class="java.lang.String"/>
+	<field name="Monthly Amortization" class="java.lang.Double"/>
+	<field name="BORROWER" class="java.lang.String"/>
+	<field name="COL DESCRIPTION" class="java.lang.String"/>
+	<field name="WITNESS" class="java.lang.Integer"/>
+	<group name="Group1" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{PN No.}]]></groupExpression>
+		<groupHeader>
+			<band height="236">
+				<staticText>
+					<reportElement x="82" y="26" width="399" height="21" uuid="fa1625f5-95b8-43c5-8468-3f082059ea8f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="16" isBold="true"/>
+					</textElement>
+					<text><![CDATA[MACTAN RURAL BANK (LAPU LAPU CITY), INC.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="81" y="47" width="399" height="18" uuid="8f1bfc39-c4fa-4c24-9682-be0c2b34c887">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[P R O M I S S O R Y  N O T E]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="333" y="82" width="125" height="12" uuid="4debeea3-b4ec-4b45-b7e3-5c732c5c927f">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[DATE GRANTED	           :]]></text>
+				</staticText>
+				<textField pattern="MMM. dd, yyyy">
+					<reportElement x="458" y="82" width="112" height="12" uuid="3a2af273-7bd0-4d21-80e8-58931f15ab86"/>
+					<textElement textAlignment="Right">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DATE GRANTED}]]></textFieldExpression>
+				</textField>
+				<textField pattern="MMM. dd, yyyy">
+					<reportElement x="458" y="95" width="112" height="12" uuid="83bf9dea-8479-4b42-9d17-b94d03803a54">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{MATURITY DATE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="333" y="95" width="125" height="12" uuid="a43d1d28-1db4-4536-8553-8d853c419dad">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[MATURITY DATE	           :]]></text>
+				</staticText>
+				<textField pattern="">
+					<reportElement x="50" y="82" width="150" height="12" uuid="4a698a24-8e47-414f-9ac5-ca6227bfd7a0">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{PN No.}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="82" width="50" height="12" uuid="c7e15cff-95a7-496d-b17d-70413b531df9">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[PN No.	:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="61" width="30" height="12" uuid="56843dc1-39ed-4340-b419-f2bc7f54997f">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[204A]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="96" width="50" height="18" uuid="95ca9448-5bc0-43a3-adb5-993f38ee38a6">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Place	:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="0" y="122" width="570" height="75" uuid="2ba96a61-322e-4ca2-b096-bbb0d0ff26d3">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Justified" markup="styled"/>
+					<textFieldExpression><![CDATA["For value received, I / We, the undersigned borrower and co-makers, hereby jointly and severally, promise to pay to MACTAN RURAL BANK (LAPU LAPU CITY), INC. - Lapu Lapu Branch with business address at " + $F{ADDRESS} + ", the sum of  " + " , (Php " + new DecimalFormat("#,##0.00").format($F{AMOUNT}) + ")" +' ' + ", Philippine Currency, with interest thereon at the rate of  "  + ' ' + ",  " + "(" +new DecimalFormat("#,##0.00").format ($F{RATE})+ "%" + ")" + " per annum with the following additional information:"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="50" y="184" width="85" height="15" uuid="d22c0fcd-8c3a-42af-9678-2e1a1c5912b9"/>
+					<textElement verticalAlignment="Top">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[PRINCIPAL	:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="50" y="199" width="85" height="12" uuid="9e1daa4d-7674-4ee5-8c9e-ac5aa368a030">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[INTEREST	:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="310" y="184" width="148" height="15" uuid="de917cbf-63e0-4b28-a8d7-818490eda42c">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[TERM                                      : ]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement x="458" y="199" width="104" height="12" uuid="629a1299-6a38-4f20-92b7-bce65cf01bf9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Monthly Amortization}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="458" y="184" width="104" height="15" uuid="400d5648-ba1c-4067-b15b-52c03f4017a8">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{TERM} + " " + "(" + $F{FREQ} + ")"]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="135" y="199" width="30" height="12" uuid="7b986a53-126f-423d-a722-5f023c93dd5a">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{RATE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="165" y="199" width="40" height="12" uuid="af048595-bde7-4c83-a1be-24a16b2ac7a5"/>
+					<textElement verticalAlignment="Top">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[%]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement x="135" y="184" width="100" height="15" uuid="2b26fdd8-8480-4098-aa82-d85ba8b93af8">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{AMOUNT}]]></textFieldExpression>
+				</textField>
+				<image>
+					<reportElement x="0" y="0" width="40" height="40" uuid="f2c9d4bb-e4d2-45f4-ae36-254b6690e46c">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<imageExpression><![CDATA[$P{resourcepath} +"/assets/logo.png"]]></imageExpression>
+				</image>
+				<textField>
+					<reportElement x="310" y="199" width="121" height="12" uuid="e2942439-e3ec-4c29-a2c9-eaf34b802d03">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{FREQ} + " AMORTIZATION"]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="431" y="199" width="27" height="12" uuid="8be40aae-aa94-4a03-b30e-1265e527670c"/>
+					<textElement textAlignment="Left">
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="602" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="-12" width="570" height="24" uuid="72f76838-3a6a-4704-9792-417138e2bdc4"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	In the event of non-payment of any of the installment as it falls due, the undersigned hereby agree to pay a three percent (3%) surcharge per month which shall be based on the unpaid interest and principal.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="17" width="570" height="60" uuid="94cdc8c2-6890-4d24-89d3-b206072ea64c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	In case of non-payment of this Note or the loan or any portion thereof when they become due and payable and/or upon its maturity, the whole some outstanding and unpaid under this Note shall thereupon become immediately due and payable without need of demand or notice to the undersigned. If this Note remains unpaid upon maturity, the undersigned agrees to pay Past due interest of ________________ (_____%) percent per month  base on the outstanding balance of Penalty, Interest, and Principal. This shall be in addition to the surcharge mentioned in the next preceding paragraph.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="82" width="570" height="84" uuid="3eec1e00-ce62-4acd-a296-d1b7f407fae0"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	In the foregoing instance, the COrporation is hereby authorized, at its option, and without notice, to set off or apply to the payment of any amount due and outstanding under this Note, any and all moneys which may come into its possesion by way of deposit or any other manner, belonging to the undersigned. In the case of property other than money, the undersigned irrevocably appoints the Corporation as attorney-in-fact of the undersigned to sell or dispose of any property of the undersigned, which may be in the Corporation's possession, by public or provate sale, and to apply the net proceeds thereof (after deducting the amounts for taxes, fees, and other related expense) to the payment of this Note and all obligations hereunder. The undersigned shall pay the deficiency, if any, upon demand. It is understood, however, that the corporation has no obligation to carry out this authority.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="171" width="570" height="36" uuid="03f76a0d-cf65-4075-b192-6daedd6f533d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	The above provision shall likewise be applicable in the event of bankruptcy, insolvency, recievership, levy on execution, garnishment or attachment, or in case of conviction for creminal offense by final judgement carrying with it the penalty of civil interdiction affecting any or all of the undersigned, or in any of the cases covered by Article 1198 of the Civil COde of the Philippines.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="212" width="570" height="60" uuid="82ad4199-7989-44c4-a532-665821c3114a"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	The undersigned and all endorsers, sureties, co-makers and guarantors hereof  hereby jointly and severally waive presentment for payment, demand, notice of non-payment, notice of protest of this note, and all endorsers, sureties, co-makers and guarantors hereof consent to anny and all extensions of time, renewals, waivers or modifications that may be granted by the Corporation with respect to the payment or other provisions of this Note, and decree that additional makers, endorsers, guarantor, co-makers or sureties may become parties hereto without notice to them or without affecting their liability hereunder.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="277" width="570" height="36" uuid="648f781d-5d78-4c43-aa8e-7f61bf364369"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	The Corporation shall not by any act of omission or commission to waive any of its rights or remedies hereunder unless such waiver be in writing and sogned by the Corporation and then only to the extent specifically set forth therein; a waiver on one event shall not be construed as continuing or as a bar to or waiver of such right or remedy on a subsequent event.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="318" width="570" height="24" uuid="b6ddccb4-3ac4-48b9-9731-1357035608e6"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	In case of an extraordinary  inflation or deflation of currentcy stipulated should supervene, the undersigned waives the right to article 1250 of the Civl Code of the Philippines.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="347" width="570" height="72" uuid="214c524f-937c-474f-b3d2-70c1cd3dc2ed">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	In the event that the Coropration shall require the services of a lawyer to enforce collection of this Note or any obligation herein, the undersigned shall pay the Corporation equivalent to 25% of the amount due but in no case less than Five Thousand Pesos (P5,000.00) as attorney's fees, plus cost of suit and other judicial or extar-judicial expenses. The undersigned shall also pay the Corporation allcosts and expenses for collection, wether or not the services of a lawyer are engaged or court action is instituted. The undersigned  hereby expressly submit to the jurisdiction of the porper courts of the City of Cebu or Province of Cebu or of the place of execution of this Note as the case may be, at the option of the Corporation, in the event of litigation arising herewith. This is to the exclusion of all other courts.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="424" width="570" height="36" uuid="ee825285-d381-4985-b18a-3f94b923b87c"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	In case of judicial execution of this Note or any part of it, the undersigned hereby waive all rights to seek exemption from said execution of properties exempt from execution under the provisions of Rule 39, Section 12 of the Rules of Court, and other related provisions of existing laws, rules and regulations.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="465" width="570" height="24" uuid="830de7a3-5cfa-4c9f-bf7b-6d075633a3eb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	The undersigned agree that should amy of the stipulations herein be held invalid, the legality and enforciability of the remaining stipulations shall not in any way be affected or impaired.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="494" width="570" height="12" uuid="820cd0d0-316c-424d-947a-371f9c3a6e00"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	This Note shal be binding upon the undersigned, and the latter's heir's assigns, executors and / or successor-in-interest.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="511" width="570" height="24" uuid="db9a96a5-c202-4005-9825-e6f942d645f9"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	The liability of each of the undersigned shall be absolutely and unconditional and without regard to the liability of any of the other party/ies hereto.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="540" width="570" height="24" uuid="bbf62e97-2f7e-4053-b426-e9217f267e86"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[	DEMAND AND DISHONOR WAIVED. Holder may accept partial payment reserving his right of recourse againts each and or /or all endorsers.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="572" width="570" height="12" uuid="a0f3e1a2-4162-49e2-ba0c-bd222dcd7581"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[This Promissory Note is secured by:]]></text>
+			</staticText>
+		</band>
+		<band height="115">
+			<line>
+				<reportElement x="382" y="7" width="180" height="1" uuid="ac02d30a-8641-4690-810d-84baa48164fe">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="7" width="180" height="1" uuid="229cea2f-4f84-4871-a910-6f7e2979c8eb"/>
+			</line>
+			<line>
+				<reportElement x="190" y="7" width="180" height="1" uuid="c3d6f558-22c2-4702-9984-0fd6aeb97810"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="8" width="180" height="13" uuid="b7ba4d7d-3790-4cfc-a47d-b859ef201c39">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Borrower]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="382" y="8" width="180" height="13" uuid="7d81052b-5d37-4aa9-96ff-e35a7a953f2d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Borrower]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="190" y="8" width="180" height="13" uuid="122fc0e3-d8b2-4d92-8894-e286d0a1e725">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Borrower]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="-6" width="180" height="13" uuid="ed86224c-69e3-4b2a-835f-b47afca54701">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BORROWER}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="43" width="180" height="1" uuid="97ff3253-7a37-47ef-aa8b-1b5a9ce0a841">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="382" y="43" width="180" height="1" uuid="21f3f29b-73a7-48ad-b58e-b73c4e78a255"/>
+			</line>
+			<staticText>
+				<reportElement x="0" y="66" width="562" height="13" uuid="7c580a8f-f9b5-44b6-b64e-296ca670f237">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SIGNED IN THE PRESENCE OF:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="44" width="180" height="12" uuid="2f65a7b8-2ffa-46c9-a870-69a8e86cf99a"/>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Co-Borrower]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="382" y="44" width="180" height="12" uuid="15608c76-326c-4fea-8719-a9b087db451c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Co-Borrower]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="103" width="180" height="12" uuid="02128669-7239-45de-82bc-6edff71dcae4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Witness]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="382" y="103" width="180" height="12" uuid="9debc7d6-99ef-4baf-925a-6e7a5bc5bf99">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Witness]]></text>
+			</staticText>
+			<line>
+				<reportElement x="382" y="102" width="180" height="1" uuid="18ee74b9-6a65-43b7-94f8-7933f5151238"/>
+			</line>
+			<line>
+				<reportElement x="0" y="102" width="180" height="1" uuid="994ac5b5-a963-4586-b8b1-d8edc4e2033f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</line>
+		</band>
+	</detail>
+	<noData>
+		<band height="59">
+			<staticText>
+				<reportElement x="82" y="46" width="400" height="13" uuid="b4357f7c-58f1-4fbd-abe4-54579203ac0c">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[NO DATA FOR REPORT]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="82" y="30" width="400" height="16" uuid="d45c5ada-b03c-4d54-817c-84b58bad21a9">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PROMISSORY NOTE"]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="462" y="13" width="100" height="13" uuid="e78c62d2-f1bf-4e9f-90c3-71d56f4fcbe0">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="462" y="0" width="100" height="13" uuid="954a49b3-3c67-43b3-b1e8-9bde46ddea22">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="0" y="0" width="40" height="40" uuid="1849fa6e-06af-44ce-a84b-5a0451f8f2e7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{resourcepath} +"/assets/logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</noData>
+</jasperReport>

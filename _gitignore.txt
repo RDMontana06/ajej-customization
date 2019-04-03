@@ -1,0 +1,7 @@
+target/
+.idea
+grails-app/conf/DataSource.groovy
+/nbproject/private/
+.bak
+.zip
+web-app/reports_repository/

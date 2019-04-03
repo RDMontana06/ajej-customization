@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-11-09T15:20:40 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loanapplicationreportjrxml" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="93c7ba08-9aed-4369-b4ba-de594753da0d">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LocalHost2"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="id" class="java.lang.String"/>
+	<parameter name="resourcepath" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+	(select param_value from institution where param_code = 'GEN.10000') as institution,
+	branch.run_date as run_date,
+	loan_application.id,
+	cast(loan_application.id as text) as loanapp_id,
+	loan_application.version,
+	--loan_application.a1,
+	loan_application.account_officer,
+	loan_application.amount,
+	loan_application.application_date,
+	loan_application.approval_status_id,
+	split_part(loan_application_status.description,'|',1) as approval_status_desc,
+	loan_application.approved_by_id,
+	user2.name1||' '||case when user2.name2 is null then '' else left(user2.name2,1)||'.'end ||' '||user2.name3 as approve_by_name,
+	--loan_application.available_amount_for_loan,
+	--loan_application.b1,
+	loan_application.branch_id,
+	branch.name as branch_name,
+	--loan_application.c1,
+	loan_application.currency_id,
+	currency.code as currency_code,
+	loan_application.customer_id,
+	customer.display_name,
+	customer.customer_id as cid,
+	customer.sss_no, 
+	(select coalesce(address.address1,'') || ' ' || coalesce(address.address2 ,'')|| ' ' || coalesce(address.address3,'') from address where address.is_primary='True' and address.customer_id=customer.id) as address,
+	loan_application.date_approved,
+	loan_application.date_rejected,
+	--loan_application.ftm,
+	--loan_application.formd1,
+	--loan_application.formd2,
+	--loan_application.formd3,
+	--loan_application.formd4,
+	--loan_application.formd5,
+	--loan_application.formd6,
+	--loan_application.formd7,
+	--loan_application.formd8,
+	--loan_application.formd9,
+	--loan_application.formd10,	
+	--loan_application.home_pay,
+	--loan_application.loan_deped_billing_type_id,
+	--loan_application.max_amt,
+	--loan_application.net_avail,
+	--loan_application.others_specify,
+	loan_application.product_id,
+	product.name as product_desc,
+	loan_application.purpose,
+	--loan_application.redemption01,
+	--loan_application.redemption02,
+	--loan_application.redemption03,
+	--loan_application.redemption1,
+	--loan_application.redemption2,
+	--loan_application.redemption3,
+	loan_application.rejected_by_id,
+	user1.name1||' '||case when user1.name2 is null then '' else left(user1.name2,1)||'.'end ||' '||user1.name3 as rejected_by_name,
+	--loan_application.required_net_pay,
+	loan_application.term
+	--loan_application.termination01,
+	--loan_application.termination02,
+	--loan_application.termination03,
+	--loan_application.termination1,
+	--loan_application.termination2,
+	--loan_application.termination3,
+	--loan_application.undeducted01,
+	--loan_application.undeducted02,
+	--loan_application.undeducted03,
+	--loan_application.undeducted1,
+	--loan_application.undeducted2,
+	--loan_application.undeducted3
+
+ from loan_application
+left join loan_application_status on loan_application_status.id = loan_application.approval_status_id
+left join currency on currency.id = loan_application.currency_id
+left join customer on customer.id = loan_application.customer_id
+left join user_master as user1 on user1.id = loan_application.rejected_by_id
+left join product on product.id = loan_application.product_id
+--left join loan_deped_billing_type on loan_deped_billing_type.id = loan_application.loan_deped_billing_type_id
+left join user_master as user2 on user2.id = loan_application.approved_by_id
+left join branch on branch.id = loan_application.branch_id
+
+where trim(to_char(loan_application.id,'99999')) =  $P{id}]]>
+	</queryString>
+	<field name="institution" class="java.lang.String"/>
+	<field name="run_date" class="java.sql.Timestamp"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="loanapp_id" class="java.lang.String"/>
+	<field name="version" class="java.lang.Long"/>
+	<field name="account_officer" class="java.lang.String"/>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="application_date" class="java.sql.Timestamp"/>
+	<field name="approval_status_id" class="java.lang.Integer"/>
+	<field name="approval_status_desc" class="java.lang.String"/>
+	<field name="approved_by_id" class="java.lang.Integer"/>
+	<field name="approve_by_name" class="java.lang.String"/>
+	<field name="branch_id" class="java.lang.Integer"/>
+	<field name="branch_name" class="java.lang.String"/>
+	<field name="currency_id" class="java.lang.Integer"/>
+	<field name="currency_code" class="java.lang.String"/>
+	<field name="customer_id" class="java.lang.Integer"/>
+	<field name="display_name" class="java.lang.String"/>
+	<field name="cid" class="java.lang.String"/>
+	<field name="sss_no" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="date_approved" class="java.sql.Timestamp"/>
+	<field name="date_rejected" class="java.sql.Timestamp"/>
+	<field name="product_id" class="java.lang.Integer"/>
+	<field name="product_desc" class="java.lang.String"/>
+	<field name="purpose" class="java.lang.String"/>
+	<field name="rejected_by_id" class="java.lang.Integer"/>
+	<field name="rejected_by_name" class="java.lang.String"/>
+	<field name="term" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="70" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="572" height="18" uuid="4f5fc468-a1c2-468c-91f8-e681b49ed2d2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{institution}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMM d, yyyy">
+				<reportElement x="0" y="20" width="572" height="14" uuid="ceb9bd6e-9818-43a7-a609-52879e067ece">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{run_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="572" height="30" uuid="bd9b1555-d0c8-4fc3-8afe-bac81bdb2155"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Loan Application Details Report]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="327" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="6" width="100" height="13" uuid="d1cc810f-0274-42ac-8885-893b2e405b8a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Loan Application ID:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="21" width="100" height="13" uuid="8131e858-d597-4c1a-97ab-60462c393ce4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Borrower's Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="51" width="100" height="13" uuid="bc63951d-604b-4919-94fb-5e001c292a04">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[SS No.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="66" width="100" height="13" uuid="f8ee4938-45b4-4dcd-8867-d00eeaa5ba05">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Product:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="81" width="100" height="13" uuid="0518187b-8035-4105-857c-3689e0b681c2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Branch:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="101" y="6" width="178" height="13" uuid="0cf729a4-9914-48b0-a196-06be33e7144a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{loanapp_id}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="101" y="21" width="178" height="13" uuid="5428bb4d-84f5-4f84-92d0-7f83be5f4d6c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{display_name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="100" y="51" width="178" height="13" uuid="926fa45b-27ef-436d-9706-35e71ba5e66b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{sss_no}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="100" y="66" width="178" height="13" uuid="3e557715-b78e-4885-b9ca-512bc85ba6f1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{product_desc}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="100" y="81" width="178" height="13" uuid="9dcdf0dd-72b2-4aa4-a28a-cf2ecf9c82bb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{branch_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="290" y="51" width="100" height="13" uuid="badb61c2-92a1-45f4-bc15-b81853ec971d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Currency:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="290" y="66" width="100" height="13" uuid="bd38954b-c9ba-434f-aba8-a196ecca7911">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Applied Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="290" y="81" width="100" height="13" uuid="3a9c9d14-1965-4549-823d-861b6fb8a3cb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Term]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="96" width="100" height="13" uuid="f44b7db1-7786-4390-a65a-d036cd11c954">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Purpose]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="290" y="96" width="100" height="13" uuid="53184612-c524-4bce-a13d-7dd47a818dac">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="390" y="51" width="178" height="13" uuid="d90d88d1-80b4-49b6-94e3-edef0d040853">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{currency_code}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00#">
+				<reportElement positionType="Float" x="390" y="66" width="178" height="13" uuid="2098f5b3-ffdf-4ba6-a8f3-3982dd251a10">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.###">
+				<reportElement positionType="Float" x="390" y="81" width="178" height="13" uuid="ae7d92ed-e6fa-4af3-bcf6-217754e850e2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{term}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="101" y="96" width="178" height="13" uuid="c3d86f69-b4f7-43a8-8807-0534d035644c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{purpose}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="390" y="96" width="178" height="13" uuid="c5e8d2d7-06f9-430b-a8d6-6f81a12f4bcd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{approval_status_desc}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="36" width="100" height="13" uuid="be8a59c8-5d1d-4cfa-8703-4f603d00e0d5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[CID No.:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="101" y="36" width="178" height="13" uuid="ecbf9db4-d106-49a9-95c2-5aabc4fe1d08">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{cid}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="290" y="6" width="100" height="13" uuid="a2ab307e-b4f4-42b1-a985-e22395ca1b5f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Address:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement positionType="Float" x="390" y="6" width="178" height="28" uuid="3992db5d-46ed-441d-964f-1315ac154783">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="290" y="36" width="100" height="13" uuid="4d13b27e-cf13-4408-afae-d2117078539f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Application Date:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="MM/dd/yyyy">
+				<reportElement positionType="Float" x="390" y="36" width="178" height="13" uuid="248785da-62a9-4b49-9338-ef489edd0a40">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{application_date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="116" width="572" height="16" uuid="c375d5a1-1bf6-48cb-972b-695ec09d003b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Financial Details]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="2" y="136" width="570" height="24" uuid="5e362f17-0659-4f2b-9b25-8c35b7be36ab"/>
+				<subreportParameter name="lnapp_id">
+					<subreportParameterExpression><![CDATA[$F{loanapp_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{resourcepath} +"/reports/loanapp/loanapp_findetails.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="170" width="572" height="16" uuid="c5ed8104-e472-4876-9942-ff0b279d64a7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Co-Maker Informations]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="190" width="570" height="24" uuid="4dee4c54-0d79-46b8-b766-dfc66216ec9b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="lnapp_id">
+					<subreportParameterExpression><![CDATA[$F{loanapp_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{resourcepath} +"/reports/loanapp/loanapp_comakerinfo.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="220" width="572" height="16" uuid="052ddb1f-0227-4123-9986-8169a91a10c4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Collateral Details]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="240" width="570" height="2" uuid="4cd9a7ab-6ad9-4340-bec8-cb2a6983fc7a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="lnapp_id">
+					<subreportParameterExpression><![CDATA[$F{loanapp_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{resourcepath} +"/reports/loanapp/loanapp_collateral_rem.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="243" width="570" height="2" uuid="00e0bad3-f93e-4855-959a-d708ccbb38bd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="lnapp_id">
+					<subreportParameterExpression><![CDATA[$F{loanapp_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{resourcepath} +"/reports/loanapp/loanapp_collateral_chat.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="246" width="570" height="2" uuid="653e657c-4531-4518-ac72-cb84d2b326ea">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="lnapp_id">
+					<subreportParameterExpression><![CDATA[$F{loanapp_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{resourcepath} +"/reports/loanapp/loanapp_collateral_hold.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="249" width="570" height="2" uuid="54f172a4-2a4f-4d05-a5c8-ef6f877c6d4b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="lnapp_id">
+					<subreportParameterExpression><![CDATA[$F{loanapp_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{resourcepath} +"/reports/loanapp/loanapp_collateral_others.jasper"]]></subreportExpression>
+			</subreport>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="5" y="290" width="275" height="13" uuid="82a99fab-3be6-407e-b8e3-df7129116431">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{approve_by_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="296" y="290" width="275" height="13" uuid="c84c77c1-8714-437f-8c89-98b78075dd76"/>
+				<textFieldExpression><![CDATA[$F{rejected_by_name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="5" y="275" width="275" height="13" uuid="9aecde80-73ec-416c-95dd-24d46ddebcce">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Approved By:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="296" y="275" width="275" height="14" uuid="a28b7f5a-02bf-43e8-8518-0134ce66a953"/>
+				<text><![CDATA[Rejected By:]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

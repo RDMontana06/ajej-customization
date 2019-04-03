@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-11-09T13:43:27 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loanapp_collateral_rem" pageWidth="612" pageHeight="792" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="509a14dd-c892-4e8b-90bf-b8047775ffa0">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LocalHost2"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="lnapp_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+	loan_application_collaterals.loan_application_id,
+	collateral.collateral_type_id,
+	loan_collateral_type.description as collateral_type_desc,
+	collateral.description,
+	collateral.appraised_value,
+	appraised_value_type.description as rem_appraised_value_type_desc,
+	collateralrem.tct_no as rem_tct_no,
+	collateralrem.lot_no as rem_lot_no,
+	collateralrem.date_of_issuance as rem_dateofissuance,
+	collateralrem.location as rem_location,
+	collateralrem.registry_of_deeds as rem_registryofdeeds,
+	collateralrem.other_owners as rem_otherowners,
+
+	collateral_chattel.identification_no as chat_idno,
+	collateral_chattel.acquisition_cost as chat_acquistion_cost,
+	collateral_chattel.acquisition_date as chat_acquistion_date,
+	collateral_chattel.cr_no as chat_cr_no,
+	collateral_chattel.cr_date as chat_cr_date,
+	collateral_chattel.or_no as chat_or_no,
+	collateral_chattel.or_date as chat_or_date,
+	collateral_chattel.insurance_type as chat_insurance_type,
+
+	collateral_holdout.account_no as hold_acctno,
+	collateral_holdout.account_type as hold_accttype,
+	collateral_holdout.amount as hold_amount,
+	collateral_holdout.bank as hold_bank,
+	collateral_holdout.holdout_date as hold_holdoutdate,
+	collateral_holdout.on_us as hold_onus
+	
+	
+from 
+collateral
+left join loan_application_collaterals on loan_application_collaterals.collateral_id = collateral.id
+left join collateral_holdout on collateral_holdout.id = collateral.holdout_id
+left join loan_collateral_status on loan_collateral_status.id = collateral.status_id
+left join collateral_chattel on collateral_chattel.id = collateral.chattel_id
+left join customer on customer.id = collateral.owner_id
+left join loan_collateral_type on loan_collateral_type.id = collateral.collateral_type_id
+left join collateralrem on collateralrem.id = collateral.rem_id
+left join appraised_value_type on appraised_value_type.id = collateralrem.appraised_value_type_id
+
+where trim(to_char(loan_application_collaterals.loan_application_id,'999999')) =  $P{lnapp_id} 
+and  collateral.collateral_type_id = 1]]>
+	</queryString>
+	<field name="loan_application_id" class="java.lang.Long"/>
+	<field name="collateral_type_id" class="java.lang.Integer"/>
+	<field name="collateral_type_desc" class="java.lang.String"/>
+	<field name="description" class="java.lang.String"/>
+	<field name="appraised_value" class="java.lang.Double"/>
+	<field name="rem_appraised_value_type_desc" class="java.lang.String"/>
+	<field name="rem_tct_no" class="java.lang.String"/>
+	<field name="rem_lot_no" class="java.lang.String"/>
+	<field name="rem_dateofissuance" class="java.sql.Timestamp"/>
+	<field name="rem_location" class="java.lang.String"/>
+	<field name="rem_registryofdeeds" class="java.lang.String"/>
+	<field name="rem_otherowners" class="java.lang.String"/>
+	<field name="chat_idno" class="java.lang.String"/>
+	<field name="chat_acquistion_cost" class="java.lang.Double"/>
+	<field name="chat_acquistion_date" class="java.sql.Timestamp"/>
+	<field name="chat_cr_no" class="java.lang.String"/>
+	<field name="chat_cr_date" class="java.sql.Timestamp"/>
+	<field name="chat_or_no" class="java.lang.String"/>
+	<field name="chat_or_date" class="java.sql.Timestamp"/>
+	<field name="chat_insurance_type" class="java.lang.String"/>
+	<field name="hold_acctno" class="java.lang.String"/>
+	<field name="hold_accttype" class="java.lang.String"/>
+	<field name="hold_amount" class="java.lang.Double"/>
+	<field name="hold_bank" class="java.lang.String"/>
+	<field name="hold_holdoutdate" class="java.sql.Timestamp"/>
+	<field name="hold_onus" class="java.lang.Boolean"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="13" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="570" height="13" uuid="4252b4ea-1eae-4fe4-bf4a-b609a0c7adb1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[REM Information]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="76" height="30" uuid="4c615e78-a8ae-47c2-beca-20b5b2f472d8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Appraised Value]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="0" width="76" height="30" uuid="b7b5c0b0-0710-48d3-a427-40d1f9ee4a2a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[TCT No. / Lot No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="0" width="70" height="30" uuid="3907597b-e5e3-4563-92b4-7ff7eda18b78"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Date of Issuance]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="0" width="170" height="30" uuid="b268c5c2-2ade-4e1b-ae3d-c714e016cf0b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Location / Registry of Deeds]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="212" height="30" uuid="00dd3fe0-04ac-4b13-871d-02b2b677d147"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Other Owners]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="4" width="76" height="13" uuid="1d3a29fa-84cf-4f10-8d1e-2171853178ae">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{appraised_value}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="20" width="76" height="13" uuid="f8aebf94-f9af-46b7-b61d-45407ff15e48"/>
+				<textFieldExpression><![CDATA[$F{rem_appraised_value_type_desc}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="80" y="4" width="76" height="13" uuid="7f9f0159-ed98-48cf-af57-64adbab7c6ea"/>
+				<textFieldExpression><![CDATA[$F{rem_tct_no}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="80" y="20" width="76" height="13" uuid="f89bf38d-cfdd-43fc-90d3-41de4700b655"/>
+				<textFieldExpression><![CDATA[$F{rem_lot_no}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="MM/dd/yyyy" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="160" y="4" width="70" height="13" uuid="e768091d-75f4-4679-8911-1e69dd83da31"/>
+				<textFieldExpression><![CDATA[$F{rem_dateofissuance}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="230" y="4" width="170" height="13" uuid="07ac59e0-5c2a-4510-bca1-321ec2667e66"/>
+				<textFieldExpression><![CDATA[$F{rem_location}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="230" y="20" width="170" height="13" uuid="b886391c-0630-4705-85c6-b16dd6feac88"/>
+				<textFieldExpression><![CDATA[$F{rem_registryofdeeds}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="400" y="4" width="212" height="13" uuid="3e7b9bfb-4d9e-46a8-8de0-6b181075b4c2"/>
+				<textFieldExpression><![CDATA[$F{rem_otherowners}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-08-10T10:01:58 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EOD_Prer_Validation_Checking" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="45cfa712-5b6e-4755-8921-52b71266c76d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<queryString>
+		<![CDATA[select	
+	(select param_value from institution where id = 1) as institution,
+	A.username,
+	A.name1 || ' '|| case when A.name2 is null then '' else A.name2 end || ' ' || A.name3 as fullname,
+	B.name as branch,
+	C.description as designation,
+	D.description as status,
+	A.is_locked as locked,
+	A.is_teller_balanced,
+	B.run_date
+from user_master A
+inner join branch B on B.id = A.branch_id
+inner join designation C on C.id = A.designation_id
+inner join config_item_status D on D.id = A.config_item_status_id
+where A.is_teller_balanced = false]]>
+	</queryString>
+	<field name="institution" class="java.lang.String"/>
+	<field name="username" class="java.lang.String"/>
+	<field name="fullname" class="java.lang.String"/>
+	<field name="branch" class="java.lang.String"/>
+	<field name="designation" class="java.lang.String"/>
+	<field name="status" class="java.lang.String"/>
+	<field name="locked" class="java.lang.Boolean"/>
+	<field name="is_teller_balanced" class="java.lang.Boolean"/>
+	<field name="run_date" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="65" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="52" width="86" height="13" uuid="713f1a36-b2d1-4f19-9221-5641aa5dcbdb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Username]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="86" y="52" width="124" height="13" uuid="9c5455d2-c550-44bd-9d77-4800d25b529b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Full Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="52" width="90" height="13" uuid="ba3869a0-34c3-4222-ac9b-2c69ce66b5fc"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Branch]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="52" width="100" height="13" uuid="90302369-af28-4b5c-a6a4-c2cfa9b5db6e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Designation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="52" width="60" height="13" uuid="0bdeab63-c6ff-44e7-8e7f-8c7bf93bac90"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="52" width="50" height="13" uuid="39c7b687-f9fa-4b2f-86f7-ed00f0a7c216"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Locked]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="510" y="52" width="62" height="13" uuid="ecca5c0a-eb58-4eed-8215-c469f456bfc3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Balanced]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="280" height="20" uuid="f485127a-1df1-4d1a-8111-ae1dc2107676">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[EOD Pre-Validation Checking]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="2" width="100" height="26" uuid="bfa317cb-b343-4a6a-a315-869b88e90530">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{institution}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Prevent">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<textField evaluationTime="Band">
+				<reportElement positionType="Float" x="0" y="1" width="86" height="13" uuid="ed1cc1e2-d56e-4409-9038-b578737e8de3"/>
+				<textFieldExpression><![CDATA[$F{username}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Band">
+				<reportElement positionType="Float" x="86" y="1" width="124" height="13" uuid="b7d51d3f-bb3e-4cf1-ab9f-b30fd9ee90d7"/>
+				<textFieldExpression><![CDATA[$F{fullname}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Band">
+				<reportElement positionType="Float" x="210" y="1" width="90" height="13" uuid="561b6d68-82f7-4228-a35f-055f08b8a21c"/>
+				<textFieldExpression><![CDATA[$F{branch}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Band">
+				<reportElement positionType="Float" x="300" y="1" width="100" height="13" uuid="2cc0c35a-6993-4dd6-b9e2-8b8cb4e26fbc"/>
+				<textFieldExpression><![CDATA[$F{designation}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Band">
+				<reportElement positionType="Float" x="400" y="1" width="60" height="13" uuid="ce81e719-11ac-4038-8b1a-f6e8f10962d6"/>
+				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Band">
+				<reportElement positionType="Float" x="510" y="1" width="62" height="13" uuid="f6ab0f94-06f3-45c7-a8d8-63f45293ed15"/>
+				<textFieldExpression><![CDATA[$F{is_teller_balanced}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Band">
+				<reportElement positionType="Float" x="460" y="1" width="50" height="13" uuid="ee11fcb2-b840-4105-8c10-21e8b793d4c1"/>
+				<textFieldExpression><![CDATA[$F{locked}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Prevent"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="170" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="7" width="280" height="20" uuid="d7dfc3c9-bb64-4c78-9861-87362c56e8fe">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[List of Approved Loan ]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="28" width="572" height="19" isPrintWhenDetailOverflows="true" uuid="0c2a1c77-b4f1-4f96-8afe-a5a4e7ebc444"/>
+				<subreportParameter name="branch">
+					<subreportParameterExpression><![CDATA[$F{institution}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["EOD_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="0" y="58" width="285" height="20" uuid="2d772d36-8d1e-4948-b63b-11c4f5bd7f58">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[List of Disbursed Loan]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="82" width="572" height="22" uuid="2885cf7c-ecb6-49e2-98a0-e0423fe3b3cd"/>
+				<subreportParameter name="branch1">
+					<subreportParameterExpression><![CDATA[$F{institution}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["EOD_subreport2.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="0" y="116" width="280" height="20" uuid="84d22634-26d8-429e-a6cd-ac2c80115af9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GL Account Check]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="116" width="290" height="20" uuid="feda373e-44b2-4f24-abc7-b4cbde0d2da7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+			<subreport overflowType="Stretch">
+				<reportElement positionType="Float" x="0" y="139" width="570" height="14" uuid="5e79848c-2d40-4091-9e09-358ad4489f46"/>
+				<subreportParameter name="branch3">
+					<subreportParameterExpression><![CDATA[$F{institution}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["EOD_subreport3.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="158" width="570" height="12" uuid="200961a8-c0f9-47c0-ac30-934c05632a9a"/>
+				<subreportParameter name="branch4">
+					<subreportParameterExpression><![CDATA[$F{institution}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["EOD_sebreport4.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</summary>
+</jasperReport>

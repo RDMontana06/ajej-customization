@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.2.1.final using JasperReports Library version 6.2.1  -->
+<!-- 2016-04-13T17:35:43 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="CREDIT ADVICE" pageWidth="612" pageHeight="396" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="59a4d452-08f7-4d8c-831c-3ee842c21527">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LOCAL_DATABASE"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString>
+		<![CDATA[select 
+	(select param_value from institution where id = '1') as "BANK NAME",
+	B.address as "BANK ADDRESS",
+	C.name as "CURRENCY",	
+	A.txn_date as "DATE",
+	B.name as "RESPONDING BRANCH",
+		case when A.txn_particulars is null then '---' else A.txn_particulars end as "PARTICULARS",
+	D.description as "RESPONDINDING BRANCH ENTRY",
+	F.debit_amt as "DEBIT",
+	F.credit_amt as "CREDIT",
+	E.username as "PREPARED BY"
+from txn_file A
+	inner join currency C on A.currency_id = C.id
+	inner join branch B on A.branch_id = B.id
+	inner join txn_type D on A.txn_type_id = D.id
+	inner join user_master E on A.user_id = E.id
+	inner join txn_breakdown F on A.id = F.txn_file_id
+where D.code IN ('090')
+order by  E.username, B.name]]>
+	</queryString>
+	<field name="BANK NAME" class="java.lang.String"/>
+	<field name="BANK ADDRESS" class="java.lang.String"/>
+	<field name="CURRENCY" class="java.lang.String"/>
+	<field name="DATE" class="java.sql.Timestamp"/>
+	<field name="RESPONDING BRANCH" class="java.lang.String"/>
+	<field name="PARTICULARS" class="java.lang.String"/>
+	<field name="RESPONDINDING BRANCH ENTRY" class="java.lang.String"/>
+	<field name="DEBIT" class="java.lang.Double"/>
+	<field name="CREDIT" class="java.lang.Double"/>
+	<field name="PREPARED BY" class="java.lang.String"/>
+	<variable name="DEBIT1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{DEBIT}]]></variableExpression>
+	</variable>
+	<variable name="CREDIT1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{CREDIT}]]></variableExpression>
+	</variable>
+	<group name="BRANCH" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{RESPONDING BRANCH}]]></groupExpression>
+		<groupHeader>
+			<band height="88">
+				<textField>
+					<reportElement x="131" y="0" width="249" height="20" uuid="20e65d6a-1521-463a-8d50-a399960753d9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Top"/>
+					<textFieldExpression><![CDATA[$F{RESPONDING BRANCH}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="131" height="20" uuid="2969f223-f377-4590-a902-2f1b2fa919d6"/>
+					<textElement verticalAlignment="Top"/>
+					<text><![CDATA[Responding Branch	:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="0" y="33" width="572" height="39" uuid="fe361ed5-4463-4d87-883e-4791f5f22cb9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{PARTICULARS}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="20" width="572" height="13" uuid="afafb6ff-06a9-435c-8cd5-984ddf28e1e9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[PARTICULARS	 :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="75" width="372" height="13" uuid="ce8bdb8c-557d-4b10-afb8-b3d68d76b02f">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[RESPONDING BRANCH ENTRY]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="372" y="75" width="100" height="13" uuid="0a9b46b6-cbbb-413b-9758-a25d39fcff15">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[DEBIT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="472" y="75" width="100" height="13" uuid="d1014ab4-0f07-4c30-a983-6b7e647b50c1">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[CREDIT]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="15">
+				<staticText>
+					<reportElement x="0" y="0" width="372" height="15" uuid="27ec5e17-03fa-4acc-a6a4-496ed85256d1"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[TOTAL]]></text>
+				</staticText>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="372" y="0" width="100" height="15" uuid="be93cd51-7127-4243-8f2f-e58a981349df">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{DEBIT1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="472" y="0" width="100" height="15" uuid="1b85c6a6-a380-445e-927a-b8d649829fc1"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{CREDIT1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="82" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="572" height="16" uuid="7b452ddc-9dec-4b71-a431-01c9858cf7c3"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MACTAN RURAL BANK INC. (LAPU-LAPU), INC.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="16" width="572" height="13" uuid="d722ac21-c9dc-44cf-b429-6522cab9be1f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{BANK ADDRESS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="37" width="572" height="16" uuid="8b79a36a-26db-40af-a6ff-9af37ed2941d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CREDIT ADVICE]]></text>
+			</staticText>
+			<textField pattern="MMMM dd, yyyy">
+				<reportElement x="131" y="61" width="180" height="20" uuid="a2dd7967-5463-4615-8241-765be274e4a0"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DATE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="61" width="131" height="20" uuid="32a04544-135b-44fc-a00d-af822624595a">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[DATE 			: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="61" width="20" height="20" uuid="48cb0393-d92d-4cdf-bbbb-9503309d9675">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[DA]]></text>
+			</staticText>
+			<line>
+				<reportElement x="404" y="81" width="150" height="1" uuid="d1320b73-0b96-4726-a0b1-e7d12c1c9200">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="472" y="0" width="100" height="15" uuid="03996987-2ac8-4622-abb2-043d9b31c17f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CREDIT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="372" y="0" width="100" height="15" uuid="93deac4c-3050-4790-ae0a-45bcd0ead1ed">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{DEBIT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="372" height="15" uuid="bbe66a9f-d312-4884-b156-5f2b9b5ca08c"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{RESPONDINDING BRANCH ENTRY}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="190" height="15" uuid="ad031436-b5fb-468f-96c8-e5e925f805a7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PREPARED BY : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="191" y="0" width="190" height="37" uuid="6e966365-7338-4952-9191-88fe1da07de3"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CHECKED BY : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="382" y="0" width="190" height="37" uuid="a4b5facb-6808-49d7-9d2c-67c76b51a332">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[APPROVED BY : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="35" width="190" height="15" uuid="e7aad416-0364-493e-b265-d855801ce616">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{PREPARED BY}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="392" y="50" width="180" height="1" uuid="b94de928-7232-4500-b7e9-7f38c23f62d8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="50" width="180" height="1" uuid="84524dfe-90be-418c-a8c3-c9635d77c9df">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="191" y="50" width="180" height="1" uuid="8ab3e067-fb4a-4d28-bb04-d1c635bcba37">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

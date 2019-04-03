@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-11-09T10:11:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="loanapp_comakerinfo" pageWidth="612" pageHeight="792" columnWidth="612" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="4a29b24f-8162-41a5-9c14-48bffbce3709">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LocalHost2"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="lnapp_id" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+	loan_application_comaker.loan_application_id,
+	customer.customer_id,
+	customer.display_name,
+	customer.sss_no
+ from 
+loan_application_comaker
+inner join customer on customer.id = loan_application_comaker.customer_id
+inner join loan_application on loan_application.id = loan_application_comaker.loan_application_id
+
+where  trim(to_char(loan_application_comaker.loan_application_id,'999999')) =  $P{lnapp_id} ]]>
+	</queryString>
+	<field name="loan_application_id" class="java.lang.Integer"/>
+	<field name="customer_id" class="java.lang.String"/>
+	<field name="display_name" class="java.lang.String"/>
+	<field name="sss_no" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="13" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="100" height="13" uuid="8d0419de-3a7d-46e8-92cb-712eedb0766e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Co-Maker CID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="100" y="0" width="308" height="13" uuid="1d876258-9db7-4a98-a8f3-4f9c18fe20cc"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Co-Maker]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="408" y="0" width="204" height="13" uuid="b61dc800-6f5c-4552-9f8d-643f21bdedee"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SS No]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="13" uuid="5165fba6-2920-4cae-a7df-ba7ef59a8688"/>
+				<textFieldExpression><![CDATA[$F{customer_id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="308" height="13" uuid="86d4cf71-7992-4ea1-970b-ac1e877d4dc6"/>
+				<textFieldExpression><![CDATA[$F{display_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="408" y="0" width="204" height="13" uuid="8f933e54-968c-41e6-9029-316cc1c45f30">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{sss_no}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

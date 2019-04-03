@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-09-08T11:51:08 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MRB FULL TRIAL BALANCE" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c14ffe79-ac8e-4709-8f5f-13adbb68a913">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="/MRB_CUSTOMIZE_REPORT/UAT_REPORT/MRB_FULL_TRIAL_BALANCE_files/FullTBal_EOD_NOLOGO"/>
+	<property name="ireport.jasperserver.user" value="jasperadmin"/>
+	<property name="ireport.jasperserver.reportUnit" value="/MRB_CUSTOMIZE_REPORT/UAT_REPORT/MRB_FULL_TRIAL_BALANCE"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<property name="ireport.jasperserver.report.resource" value="/MRB_CUSTOMIZE_REPORT/UAT_REPORT/MRB_FULL_TRIAL_BALANCE_files/main_jrxml"/>
+	<queryString>
+		<![CDATA[select 
+	(select param_value from institution where param_code='GEN.10000') as institution,
+	(select run_date from branch where id = 1)  as DATE,
+	code,
+	shortname,
+	case when (case when sum(prevbal)>=0 then sum(prevbal) else 0 end) = 0  then ( case when sum(prevbal)<0 then sum(abs(prevbal)) else 0 end)
+	else (case when sum(prevbal)>=0 then sum(abs(prevbal)) else 0 end) end as "PREVIOUS BALANCE",
+	case when sum(drtrnbal) is not null then sum(drtrnbal) else 0  end as drtrnbal,
+	case when sum(crtrnbal) is not null then sum(crtrnbal)    else 0 end as crtrnbal,
+	case when (case when ( sum(prevbal) + (sum(drtrnbal)-sum(crtrnbal)))>=0 then  (sum(prevbal) + (sum(drtrnbal)-sum(crtrnbal))) else 0 end) = 0 
+	then (case when ( sum(prevbal) + (sum(drtrnbal)- sum(crtrnbal))) < 0 then  (sum(prevbal) + (sum(drtrnbal) - sum(crtrnbal))) else 0 end ) 
+	else (case when ( sum(prevbal) + (sum(drtrnbal)-sum(crtrnbal))) >= 0 then  (sum(prevbal) + (sum(drtrnbal)- sum(crtrnbal))) else 0 end) end as "ENDING BALANCE"
+from (
+	select 
+		glac.code as code,
+		glac.name as shortname,
+		fn_get_glprevious_balance(glac.id, cast((select run_date from branch where id = 1) as date) ) as prevbal, 
+		fn_get_glbalance(glac.code, glac.branch_id, 'debit', glac.currency_id,cast((select run_date from branch where id = 1)as date)) as drtrnbal,
+		fn_get_glbalance(glac.code, glac.branch_id, 'credit', glac.currency_id, cast((select run_date from branch where id = 1) as date))  as crtrnbal
+
+	from gl_account as glac
+	where
+	   glac.financial_year = extract(year from cast((select run_date from branch where id = 1) as date))
+
+) as gl_accts
+
+where  drtrnbal <> 0 or crtrnbal <> 0 or prevbal <>0
+group by code, shortname
+--(prevbal >0 or (drtrnbal-crtrnbal)>0) and (drtrnbal >0 or crtrnbal = 0)
+order by code]]>
+	</queryString>
+	<field name="institution" class="java.lang.String"/>
+	<field name="date" class="java.sql.Timestamp"/>
+	<field name="code" class="java.lang.String"/>
+	<field name="shortname" class="java.lang.String"/>
+	<field name="PREVIOUS BALANCE" class="java.lang.Double"/>
+	<field name="drtrnbal" class="java.lang.Double"/>
+	<field name="crtrnbal" class="java.lang.Double"/>
+	<field name="ENDING BALANCE" class="java.lang.Double"/>
+	<variable name="DEBIT1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{drtrnbal}]]></variableExpression>
+	</variable>
+	<variable name="CREDIT1" class="java.lang.Double" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{crtrnbal}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="71" splitType="Stretch">
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="0" y="20" width="752" height="10" uuid="dd677c01-a891-4d06-8dfb-ad9d92e7a4d7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a">
+				<reportElement x="0" y="10" width="752" height="10" uuid="327655ea-bc83-4b7b-8a20-8a395f9d3316">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="752" height="10" uuid="df54675e-7bff-4c80-9c2b-c377d5571c14">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page: " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="50" width="752" height="21" uuid="7dc4acc1-1b45-4111-9e2f-98696111dd8f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{institution}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="98" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="752" height="18" uuid="ae84d62d-b0f6-4b24-a672-065d2bd3b1cc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TRIAL BALANCE OF GL ACCOUNTS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="38" width="30" height="30" uuid="a71b91af-ef93-4fed-b953-dc107f185401">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[As of]]></text>
+			</staticText>
+			<textField pattern="MMMM d, yyyy">
+				<reportElement x="30" y="38" width="537" height="30" uuid="45aa8a80-5d2c-4c05-b4b5-c3fadcd82255"/>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="527" y="68" width="75" height="30" uuid="b8117e10-d42d-4b56-bf4f-5aa65a0c4566">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEBIT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="452" y="68" width="75" height="30" uuid="54c63a1b-eb4c-4d78-a77c-ec7cbc251cd3">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[OLD BALANCE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="68" width="332" height="30" uuid="1dfb18a5-2c81-4212-a2a9-aa911c3513e2">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPTION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="68" width="150" height="30" uuid="87401232-4492-4e15-81b1-923979972e0d"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[GL ACCOUNT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="602" y="68" width="75" height="30" uuid="491eb3a7-e9b1-4764-a59a-29d79b1bd076">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CREDIT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="677" y="68" width="75" height="30" uuid="3c7d110a-415c-408d-8d63-d317643acd57">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[END BALANCE]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="150" height="14" uuid="486a50f9-fd3f-465d-983b-e9213898c3f1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="0" width="332" height="14" uuid="d9a9201b-2115-4afe-93f8-720e152d14b8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{shortname}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="527" y="0" width="75" height="14" uuid="d88493b2-4719-46ec-a8c6-83c398b7170c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{drtrnbal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="602" y="0" width="75" height="14" uuid="c1ad4378-6662-4d25-ae39-ed340c0f9e9d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{crtrnbal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###;(#,##0.###)" isBlankWhenNull="true">
+				<reportElement x="452" y="0" width="75" height="14" uuid="c4c3798d-15fc-4310-a707-5b3ce84b060d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PREVIOUS BALANCE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###;(#,##0.###)" isBlankWhenNull="true">
+				<reportElement x="677" y="0" width="75" height="14" uuid="5453b954-ac60-4ddd-bcbd-8fb0890999e7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ENDING BALANCE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="30" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="512" y="0" width="80" height="30" uuid="666f6336-e331-45d8-9e9c-c82c756049d7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{DEBIT1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="592" y="0" width="80" height="30" uuid="086d2cd8-1467-48fc-8ef7-dd7bac98a3e6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CREDIT1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="752" height="30" uuid="d04c9972-33b0-402a-9297-0119b2efcd35"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MBPhil Express-O Integrated Core Banking System]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

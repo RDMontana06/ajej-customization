@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-10-06T13:40:46 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="End of Month Summary FD TD Account" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="75ba6e4d-bc2e-45c0-bb1c-6cb7d2793667">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<queryString>
+		<![CDATA[select 
+	(select param_value from institution where id = '1') as "BANK NAME",
+	cast(A.run_date as date)  as "DATE",
+	A.name as "Branch",
+	C.name as "CURRENCY",
+	D.description as "STATUS",
+	I.description as "GLCODE",
+	count(B.acct_no) as "ACCOUNTS",
+	sum(B.ledger_bal_amt) as "BALANCE",
+	sum(H.accrued_interest_this_month) as "INTEREST THIS MONTH",
+	sum(H.tax_withheld) as "WHOLD TAX ADDED TAX",
+	--sum(J.txn_amt) as "CHARGES"
+	sum(case when (J.txn_template_id = 79  and H.ref_date = J.txn_date) then J.txn_amt else 0 end) as "CHARGES"
+from deposit B 
+	inner join product E on E.id = B.product_id
+	inner join branch A on B.branch_id = A.id
+	inner join currency C on E.currency_id = C.id
+	inner join deposit_status D on B.status_id = D.id
+	inner join deposit_type G on B.type_id = G.id
+	inner join cfg_acct_gl_template I on B.gl_link_id = I.id
+	inner join monthly_balance H on H.account_no = B.acct_no
+	inner join txn_file J on J.dep_acct_id = B.id
+where D.id in (2,3,4,5) and G.id =  3  and B.ledger_bal_amt <> 0 and H.ref_date = cast(A.run_date as date)
+group by A.run_date, A.name, C.name, D.description, B.status_id, I.description
+order by A.name, C.name, I.description, D.description]]>
+	</queryString>
+	<field name="BANK NAME" class="java.lang.String"/>
+	<field name="DATE" class="java.sql.Date"/>
+	<field name="Branch" class="java.lang.String"/>
+	<field name="CURRENCY" class="java.lang.String"/>
+	<field name="STATUS" class="java.lang.String"/>
+	<field name="GLCODE" class="java.lang.String"/>
+	<field name="ACCOUNTS" class="java.lang.Long"/>
+	<field name="BALANCE" class="java.lang.Double"/>
+	<field name="INTEREST THIS MONTH" class="java.lang.Double"/>
+	<field name="WHOLD TAX ADDED TAX" class="java.lang.Double"/>
+	<field name="CHARGES" class="java.lang.Double"/>
+	<variable name="ACCOUNTS1" class="java.lang.Long" resetType="Group" resetGroup="CURRENCY" calculation="Sum">
+		<variableExpression><![CDATA[$F{ACCOUNTS}]]></variableExpression>
+	</variable>
+	<variable name="BALANCE1" class="java.lang.Double" resetType="Group" resetGroup="CURRENCY" calculation="Sum">
+		<variableExpression><![CDATA[$F{BALANCE}]]></variableExpression>
+	</variable>
+	<variable name="INTEREST THIS MONTH1" class="java.lang.Double" resetType="Group" resetGroup="CURRENCY" calculation="Sum">
+		<variableExpression><![CDATA[$F{INTEREST THIS MONTH}]]></variableExpression>
+	</variable>
+	<variable name="WHOLD TAX ADDED TAX1" class="java.lang.Double" resetType="Group" resetGroup="CURRENCY" calculation="Sum">
+		<variableExpression><![CDATA[$F{WHOLD TAX ADDED TAX}]]></variableExpression>
+	</variable>
+	<variable name="CHARGES1" class="java.lang.Double" resetType="Group" resetGroup="CURRENCY" calculation="Sum">
+		<variableExpression><![CDATA[$F{CHARGES}]]></variableExpression>
+	</variable>
+	<group name="Branch" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{Branch}]]></groupExpression>
+		<groupHeader>
+			<band height="13">
+				<textField>
+					<reportElement x="0" y="0" width="572" height="13" uuid="4b6bd5c0-e353-48cd-9202-8f8bcaa61e39">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["BRANCH : " + $F{Branch}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="CURRENCY" isStartNewPage="true" isReprintHeaderOnEachPage="true">
+		<groupExpression><![CDATA[$F{CURRENCY}]]></groupExpression>
+		<groupHeader>
+			<band height="47">
+				<textField>
+					<reportElement x="0" y="0" width="572" height="13" uuid="5d2fcb71-07a4-4080-ae6c-a8bc00efbc68">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Left">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["CURRENCY : " + $F{CURRENCY}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="21" width="222" height="26" uuid="c37edda4-c0e1-4a3a-a9bb-b6b2553f65ad">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[GL ACCOUNT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="222" y="21" width="50" height="26" uuid="58fd7e52-1068-48d8-b7a0-aaac9d14437f">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[# OF ACCOUNT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="272" y="21" width="91" height="26" uuid="48d49445-b50c-4b9e-bfca-3482ea1f59e7">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[BALANCE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="363" y="21" width="69" height="26" uuid="cfa248ed-f56e-4cde-aeed-999909d4799f">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[INT. THIS MONTH]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="509" y="21" width="63" height="26" uuid="4f0293db-f01d-4abf-9825-8d1641d9955a">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[CHARGES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="440" y="21" width="69" height="26" uuid="fe7754dc-c684-4b3e-904e-53d456207351">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[WHOLD TAX ADDED TAX]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="64">
+				<staticText>
+					<reportElement x="0" y="0" width="572" height="25" uuid="9d77c2ce-6083-4580-8434-f5bf2f79c9a5">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[TOTAL PER CURRENCY :]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="100" y="25" width="80" height="26" uuid="4e29b38a-4f1a-4cf1-8881-88172a50dadf">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[# OF ACCOUNT]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="180" y="25" width="100" height="26" uuid="1113ef29-7565-4202-beb3-751df91abeb4">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[BALANCE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="280" y="25" width="100" height="26" uuid="d3e3daee-9762-4ed4-8670-e5a343406007">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[INTEREST THIS MONTH]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="472" y="25" width="100" height="26" uuid="853fb41f-6c2f-4759-9626-48f2c4cc371a">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[CHARGES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="380" y="25" width="92" height="26" uuid="ca3ffaf5-d3b3-4a7f-a877-e47e876c4fc5">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[WHOLD TAX ADDED TAX]]></text>
+				</staticText>
+				<textField pattern="#,##0">
+					<reportElement x="100" y="51" width="80" height="13" uuid="80fc9ccd-1999-42e0-ac0a-54ef24e2c080">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{ACCOUNTS1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="180" y="51" width="100" height="13" uuid="d545edf4-9b6e-403e-83d9-33cc46cb1a9e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{BALANCE1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="280" y="51" width="100" height="13" uuid="f6638c33-714c-4321-9f88-1d20206e1d74"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{INTEREST THIS MONTH1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="380" y="51" width="92" height="13" uuid="c0224775-9cd0-4d27-ace4-57614b3b17ad"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{WHOLD TAX ADDED TAX1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement x="472" y="51" width="100" height="13" uuid="ca3f29a8-0721-40c9-981c-06eaa75257db"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{CHARGES1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="114" splitType="Stretch">
+			<textField>
+				<reportElement x="380" y="0" width="192" height="13" uuid="a0dabbcb-e87e-4e7d-8f1e-e78f93dd6192">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["PAGE # : " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMM dd, yyyy">
+				<reportElement x="380" y="13" width="192" height="13" uuid="f02d695e-1a2f-4bdf-b108-f99340052b42"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="380" y="26" width="192" height="13" uuid="6946ecfc-16a3-4b82-af5d-13a787e35e4f"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="50" width="572" height="21" uuid="80af9f22-26f1-47f3-9159-30f79ac824d3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BANK NAME}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="71" width="572" height="18" uuid="ecdd27f3-e45f-4853-9c39-dc6df8fcfce7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[End of Month Summary FD/TD Account]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="89" width="40" height="25" uuid="8c68e245-6144-407d-b2c4-d54cd303cff3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[As of]]></text>
+			</staticText>
+			<textField pattern="MMM. dd, yyyy">
+				<reportElement x="40" y="89" width="410" height="25" uuid="338352b8-616e-4066-9498-fb93095cc145"/>
+				<textFieldExpression><![CDATA[$F{DATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="222" height="13" uuid="ce872a94-033e-4591-a8e6-7369fb947d35">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{GLCODE} + " - " + $F{STATUS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="222" y="0" width="50" height="13" uuid="da034a96-71bf-41d2-821c-afc1db2ac21c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACCOUNTS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="272" y="0" width="91" height="13" uuid="22137269-77e0-4b63-80e0-28a3937ae89f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BALANCE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="363" y="0" width="69" height="13" uuid="daada2d6-afd3-437d-8958-273d5233f714"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INTEREST THIS MONTH}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="440" y="0" width="69" height="13" uuid="9506e34d-0353-403d-a20d-cda0a65726c7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{WHOLD TAX ADDED TAX}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="509" y="0" width="63" height="13" uuid="2636bb08-ea41-422a-af8d-6a0b15f9ffa0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CHARGES}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="572" height="30" uuid="a296c8bb-a2e2-4072-818c-aeb56b9a4db4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MBPhil Express-O Integrated Core Banking System]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

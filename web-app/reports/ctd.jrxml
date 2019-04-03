@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-09-01T14:45:12 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="FixedDepositCertificate" pageWidth="612" pageHeight="288" columnWidth="572" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b3f29e54-3d34-4db9-9a12-0410e7e5df4e">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
+	<property name="net.sf.jasperreports.default.font.name" value="Courier New"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="ctdid" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select 	A.acct_no,
+	A.acct_name,
+	A.ledger_bal_amt,
+	A.date_opened,
+	A.maturity_date,
+	A.interest_rate,
+	cast(extract(day from (B.end_date - B.start_date)) as int)as term,
+	C.ctd_no as CTD_Number,
+	E.run_date
+from deposit A
+inner join rollover B on B.deposit = A.id
+left join issuectd D on D.deposit_id = A.id
+left join ctd C on C.issuectd_id = D.id
+inner join branch E on E.id = A.branch_id
+where A.type_id = 3 and C.ctd_no = $P{ctdid}]]>
+	</queryString>
+	<field name="acct_no" class="java.lang.String"/>
+	<field name="acct_name" class="java.lang.String"/>
+	<field name="ledger_bal_amt" class="java.lang.Double"/>
+	<field name="date_opened" class="java.sql.Timestamp"/>
+	<field name="maturity_date" class="java.sql.Timestamp"/>
+	<field name="interest_rate" class="java.lang.Double"/>
+	<field name="term" class="java.lang.Integer"/>
+	<field name="ctd_number" class="java.lang.Long"/>
+	<field name="run_date" class="java.sql.Timestamp"/>
+	<detail>
+		<band height="247" splitType="Stretch">
+			<textField>
+				<reportElement x="480" y="0" width="90" height="20" uuid="8c9ef384-3a43-411c-a85f-f6e09b731974"/>
+				<textFieldExpression><![CDATA["CTD Number"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="130" height="20" uuid="a590daa6-2154-4e18-89f8-d1b3bc7fdd91"/>
+				<textFieldExpression><![CDATA["Acct. Number"]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMM d, yyyy">
+				<reportElement x="10" y="100" width="120" height="20" uuid="362a4ad3-38c8-43e9-aadd-e28bfd41d798"/>
+				<textFieldExpression><![CDATA[$F{run_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="120" width="210" height="20" uuid="2a6471b0-9c70-4968-b740-a7c577477621"/>
+				<textFieldExpression><![CDATA[$F{acct_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="48" y="160" width="120" height="20" uuid="88a17efa-c07c-405a-a76c-6eb0cfc26ed3"/>
+				<textFieldExpression><![CDATA["Principal Amount"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="178" y="160" width="90" height="20" uuid="f2fd648a-3647-4d46-b312-4d415247ab2a"/>
+				<textFieldExpression><![CDATA["Open Date"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="278" y="160" width="120" height="20" uuid="dacc9b4a-3070-49e3-a47a-f464a5ec0314"/>
+				<textFieldExpression><![CDATA["Maturity Date"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="410" y="160" width="58" height="20" uuid="15ac01a5-b472-415c-893a-d4a5ba158c30"/>
+				<textFieldExpression><![CDATA["Term (Days)"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="160" width="58" height="20" uuid="6c99e29e-dfad-420b-a88c-68c3fdda3a68"/>
+				<textFieldExpression><![CDATA["Int. Rate"]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement x="173" y="180" width="100" height="30" uuid="c023b691-032d-4591-a19c-83c10725d7e6"/>
+				<textFieldExpression><![CDATA[$F{date_opened}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="48" y="180" width="100" height="30" uuid="5e341f68-4b9b-4010-88ff-43e1bf430540"/>
+				<textFieldExpression><![CDATA[$F{ledger_bal_amt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement x="278" y="180" width="120" height="30" uuid="d956d11a-4d44-49eb-8ff8-23466312169d"/>
+				<textFieldExpression><![CDATA[$F{maturity_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="490" y="180" width="58" height="30" uuid="1dc8e978-aa8e-4f41-b1a0-92426b176598"/>
+				<textFieldExpression><![CDATA[$F{interest_rate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="100" height="30" uuid="da52167e-0feb-49f3-8c63-d60df18ca7fd"/>
+				<textFieldExpression><![CDATA[$F{acct_no}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="480" y="20" width="88" height="30" uuid="175fdb03-73ae-4fa3-a3fc-dcf53efe97a3"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{ctd_number}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="410" y="180" width="58" height="30" uuid="636d5f84-db67-43c3-8f52-0808a054678e"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{term}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-09-05T11:20:22 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="TransactionSlipLoan" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a4c444b4-a31e-4c14-b6b8-8d1a3668426c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="net.sf.jasperreports.awt.ignore.missing.font" value="true"/>
+	<property name="net.sf.jasperreports.default.font.name" value="Courier New"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<parameter name="PrevTxnFileID" class="java.lang.Integer"/>
+	<parameter name="LatesTxnFileID" class="java.lang.Integer"/>
+	<parameter name="TxnTemplateID" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT DISTINCT
+C.txn_description as "TXN_DESC",
+--I.code as "REM",
+D.display_name as "NAME",
+(select address1 || ' ' || address2 || ' ' || address3 from address where customer_id = D.id) as "ADDRESS",
+A.opening_date as "OPENED",
+A.maturity_date as "DUE",
+B.payment_amt as "TXN AMT",
+A.granted_amount as "GRANTED",
+A.interest_rate as "RATE",
+A.adv_interest as "ADV INTEREST",
+A.product_id as "PRODUCT TYPE",
+B.interest_amt as "INTEREST AMOUNT",
+(select principal_bal_after_payment from txn_loan_payment_details where txn_file_id =$P{PrevTxnFileID}) as "PRINCIPAL BALANCE",
+B.principal_amt,
+B.principal_bal_after_payment as "PRIN AFTER PAYMENT",
+B.interest_bal_after_payment as "INTEREST BAL AFTER PAYMENT",
+B.penalty_amt,
+B.penalty_bal_after_payment,
+B.service_charge_amt,
+K.description as "FREQ",
+E.description as "STATUS",
+B.txn_file_id as "TRN NO",
+L.short_description as "SHORT DESCRIPTION",
+F.name1 || ' ' || F.name2 || ' ' || F.name3 as "SYSTEM SUPERVISOR",
+F.username as "USERNAME"
+from loan as A
+inner join (select * from txn_loan_payment_details)as B on A.id = B.acct_id
+inner join (select * from txn_file)as C on A.id = C.loan_acct_id
+inner join (select * from customer)as D on A.customer_id = D.id
+inner join (select * from user_master)as F on C.user_id = F.id
+inner join (select * from loan_acct_status)as E on A.status_id = E.id
+inner join (select * from loan_application)as J on A.loan_application_id = J.id
+--inner join (select * from loan_application_collaterals)as G on J.id = G.loan_application_id
+--inner join (select * from collateral)as H on G.collateral_id = H.id
+--inner join (select * from loan_collateral_type)as I on H.collateral_type_id = I.id
+inner join (select * from loan_installment_freq)as K on A.frequency_id = K.id
+inner join (select * from txn_template)as L on C.txn_template_id = L.id
+where B.txn_file_id = $P{LatesTxnFileID} and C.txn_template_id = $P{TxnTemplateID}]]>
+	</queryString>
+	<field name="TXN_DESC" class="java.lang.String"/>
+	<field name="NAME" class="java.lang.String"/>
+	<field name="ADDRESS" class="java.lang.String"/>
+	<field name="OPENED" class="java.sql.Timestamp"/>
+	<field name="DUE" class="java.sql.Timestamp"/>
+	<field name="TXN AMT" class="java.lang.Double"/>
+	<field name="GRANTED" class="java.lang.Double"/>
+	<field name="RATE" class="java.lang.Double"/>
+	<field name="ADV INTEREST" class="java.lang.Double"/>
+	<field name="PRODUCT TYPE" class="java.lang.Long"/>
+	<field name="INTEREST AMOUNT" class="java.lang.Double"/>
+	<field name="PRINCIPAL BALANCE" class="java.lang.Double"/>
+	<field name="principal_amt" class="java.lang.Double"/>
+	<field name="PRIN AFTER PAYMENT" class="java.lang.Double"/>
+	<field name="INTEREST BAL AFTER PAYMENT" class="java.lang.Double"/>
+	<field name="penalty_amt" class="java.lang.Double"/>
+	<field name="penalty_bal_after_payment" class="java.lang.Double"/>
+	<field name="service_charge_amt" class="java.lang.Double"/>
+	<field name="FREQ" class="java.lang.String"/>
+	<field name="STATUS" class="java.lang.String"/>
+	<field name="TRN NO" class="java.lang.Long"/>
+	<field name="SHORT DESCRIPTION" class="java.lang.String"/>
+	<field name="SYSTEM SUPERVISOR" class="java.lang.String"/>
+	<field name="USERNAME" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		</band>
+	</title>
+	<detail>
+		<band height="304" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="280" height="20" uuid="2d904c7d-d3ca-43dc-b8a5-44175398826e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TXN_DESC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="303" y="0" width="250" height="20" uuid="85c1acde-afbf-42d3-a328-ac0ed9682c8c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="303" y="20" width="250" height="30" uuid="5d999352-ebfb-42bd-8d42-e7a7accf6c2e"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ADDRESS} == null ? "" : $F{ADDRESS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="57" width="50" height="15" uuid="69693646-1f2d-4fe7-8b98-e0640e1bb0de">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OPENED}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="57" width="50" height="15" uuid="3e9829a0-ef71-4cd8-8aca-a2b1eed83853">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Opened :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="50" y="72" width="100" height="15" uuid="a318d646-24bf-4a11-aade-7fd86b5f7972">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{GRANTED})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="72" width="50" height="15" uuid="d1b3b87d-d7af-4cda-b900-e46f811361c4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Granted :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="163" y="57" width="50" height="15" uuid="94ba58ea-829d-4e8b-8919-4cc87060c10f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DUE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="128" y="57" width="35" height="15" uuid="9ed95129-bfbc-4d0e-b16c-65acbf5e6af9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Due :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="213" y="57" width="50" height="15" uuid="5fbd544e-8567-4b6f-b940-6e210907d384">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["( "+($F{DUE}.getDay() - $F{OPENED}.getDay())+" )"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="193" y="72" width="70" height="15" uuid="93eb69b1-a502-4690-8125-85d9863e03be">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{RATE})+"  %"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="163" y="72" width="30" height="15" uuid="ee542ddf-8e29-4d43-aec3-dfbd8255dd5c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Rate :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="218" y="176" width="90" height="15" uuid="0f85bee0-467a-47ae-8837-fc1525a321a6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{principal_amt})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="107" width="89" height="15" uuid="53ffa3e0-4ebf-4d4a-8d43-77307a135773">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["b/fwd        "+new SimpleDateFormat("MM/dd/yy").format($F{OPENED})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="122" width="89" height="15" uuid="46afb574-2a6a-4cbe-9815-feb8f7492793">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["b/fwd        "+new SimpleDateFormat("MM/dd/yy").format($F{OPENED})]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yy">
+				<reportElement x="128" y="107" width="90" height="15" uuid="3d44784c-069b-4a5b-a62c-c4ee62d1f85f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRINCIPAL BALANCE} == null ? new DecimalFormat("#,##0.00").format($F{GRANTED}) : new DecimalFormat("#,##0.00").format($F{PRINCIPAL BALANCE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="128" y="122" width="90" height="15" uuid="e1fd0ae2-d5e9-48d8-a6b1-0970a500258f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{ADV INTEREST})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="218" y="122" width="90" height="15" uuid="fe54dd37-0bcb-43e6-a2cd-558cee61aa10">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{ADV INTEREST})]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yy">
+				<reportElement x="308" y="107" width="90" height="15" uuid="e5b5e456-d97c-49fe-b323-ed3362319987">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRINCIPAL BALANCE} == null ? new DecimalFormat("#,##0.00").format($F{GRANTED}) : new DecimalFormat("#,##0.00").format($F{PRINCIPAL BALANCE})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="416" y="107" width="38" height="15" uuid="bad92af0-a1f3-40b7-9769-82cf05ba1aaa">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRODUCT TYPE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="455" y="141" width="70" height="15" uuid="e776c853-41e4-4463-b84a-cf4b76b45114">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FREQ}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="420" y="141" width="35" height="15" uuid="49d959aa-487c-4622-bb9b-b4ca44cacf13">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Freq :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="455" y="156" width="70" height="15" uuid="fa6df479-fb45-49b5-b290-784a3a2fcfb3"/>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{STATUS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="420" y="156" width="35" height="15" uuid="3541d1aa-06c5-48b4-8099-33d95a421625">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif"/>
+				</textElement>
+				<text><![CDATA[Status :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="308" y="122" width="90" height="15" uuid="64fd0f80-8b0d-4911-ab31-7e8b04595943">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{ADV INTEREST} - $F{ADV INTEREST})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="176" width="89" height="15" uuid="51d7f68a-8a9b-467b-8d2c-d0a57a5f5899">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["                "+new SimpleDateFormat("MM/dd/yy").format($F{OPENED})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="278" y="57" width="90" height="15" uuid="8d6ed4bf-b428-4ecb-a9e4-0514dcda7f78">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{TXN AMT})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="308" y="176" width="90" height="15" uuid="e82e37ef-d6b6-4243-b775-c386cdd7e2a8"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{PRIN AFTER PAYMENT})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="218" y="191" width="90" height="15" uuid="eb98c2d4-5734-45e6-9c15-befd722f13a0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{INTEREST AMOUNT})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="308" y="191" width="90" height="15" uuid="99135e42-584f-4734-83b2-8ee26aab0950">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{INTEREST BAL AFTER PAYMENT})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="46" y="245" width="43" height="15" uuid="b3f63024-b06a-42ed-9651-b3330d763dbc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new SimpleDateFormat("MM/dd/yy").format($F{OPENED})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="245" width="46" height="15" uuid="67862d26-7908-4587-9fab-d3a7337e1110">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TRN NO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="92" y="245" width="126" height="30" uuid="776d8833-7445-4a75-be44-9a819ae4379e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  "+$F{SHORT DESCRIPTION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="92" y="107" width="36" height="15" uuid="f0f6af40-8c4c-42f7-bd14-e11ca7337cdf"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  PRIN  "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="92" y="122" width="36" height="15" uuid="e5cde23a-b49f-4b61-85b3-a9080f413c42"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  INTR  "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="92" y="176" width="36" height="15" uuid="faf52ad4-92d7-437f-861e-298fb3ea93ba"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  PRIN  "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="218" y="245" width="90" height="15" uuid="296417f0-104f-42c5-afe2-1d3d581add70">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{TXN AMT})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="308" y="245" width="90" height="15" uuid="27dbbf13-29cd-4b35-a3ad-a43f7fab2de5"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{PRIN AFTER PAYMENT})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="289" width="150" height="15" uuid="f5afec0f-73b0-43a6-9782-ce55cf7d6c07">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SYSTEM SUPERVISOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="289" width="100" height="15" uuid="f3a7ea08-0863-4f59-8087-e3cd564045c4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{USERNAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="263" y="289" width="135" height="15" uuid="760565a3-c309-4fe0-9d5c-c8bc76c54300">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["****"+new DecimalFormat("#,##0.00").format($F{TXN AMT})+"   CR"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="92" y="191" width="36" height="15" uuid="81f51464-f972-4230-a751-13c5f9a654bd"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  INTR  "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="92" y="221" width="36" height="15" uuid="066c0c32-cb94-40cd-908b-0629e0f4421e"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  SC  "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="92" y="206" width="36" height="15" uuid="41314163-af37-4f2f-8a51-e57770a24185"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA["  PEN  "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="218" y="221" width="90" height="15" uuid="1905c72b-e117-4790-b8af-d3a0efda81ed">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{service_charge_amt})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="218" y="206" width="90" height="15" uuid="f5544667-4357-418a-9cb0-980a7e354392">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{penalty_amt})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="308" y="206" width="90" height="15" uuid="83c158cb-5390-47d2-a251-49909c975b15"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new DecimalFormat("#,##0.00").format($F{penalty_bal_after_payment})]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="60" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

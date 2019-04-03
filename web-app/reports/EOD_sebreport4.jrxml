@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-08-09T18:12:25 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="EOD_sebreport4" pageWidth="612" pageHeight="792" columnWidth="592" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" uuid="a74defed-993f-45c2-a1cf-f9a4d04e470e">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="branch4" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 	(select param_value from institution where id = 1) as institution,
+				sum(credit_amt) as credit_amt,
+				0 as debit_amt,
+				 B.name as branch
+from txn_breakdown 
+inner join branch B on B.id = txn_breakdown.branch_id 
+where credit_acct ='9-01-00-00-00-00-00-00-01'and (select param_value from institution where id = 1)  = $P{branch4}
+group by B.name
+union all
+select 	(select param_value from institution where id = 1) as institution,
+				0 as credit_amt,
+				sum(debit_amt) as debit_amt, 
+				B.name as branch
+from txn_breakdown inner join branch B on B.id = txn_breakdown.branch_id  
+where debit_acct ='9-01-00-00-00-00-00-00-01' and  (select param_value from institution where id = 1)  = $P{branch4} 
+group by B.name]]>
+	</queryString>
+	<field name="institution" class="java.lang.String"/>
+	<field name="credit_amt" class="java.lang.Double"/>
+	<field name="debit_amt" class="java.lang.Double"/>
+	<field name="branch" class="java.lang.String"/>
+	<variable name="credit" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{credit_amt}]]></variableExpression>
+	</variable>
+	<variable name="debit" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{debit_amt}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="13" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="143" height="13" uuid="38ffc06c-4021-48cd-94d5-c18445fff638">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MB Transitoria]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="280" y="0" width="120" height="13" uuid="d60a7a3b-47ae-4759-aba7-b9e99f6ad1b5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[IF($V{credit} != $V{debit},"Unbalanced","Balanced")]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

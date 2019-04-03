@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-11-01T15:03:47 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="amlactf_subreport" pageWidth="612" pageHeight="792" columnWidth="582" leftMargin="20" rightMargin="10" topMargin="0" bottomMargin="20" uuid="e11e249c-c53a-483a-943c-efd0e60a3313">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LocalHost"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select '1. Initial Due Diligince' as details ,case when null = 'TRUE' then 'YES' else '' end as optionyes ,case when null = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'Does the applicant fall under any of the following? ' as details ,case when null = 'TRUE' then 'YES' else '' end as optionyes ,case when null = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'Fictitious persons, persons whose identity and beneficial owner cannot be assured or for whom sufficient information cannot be gathered, persons that are likely to pose a higher risk of money laundering or terrorist financing such as but not limited to PEPs of foreign origin, citizens of high risk and non-cooperative countries and territories, individuals belonging to or associated with the Taliban and other Clients of Special Category as listed in Ajejdrikdrik AML/CFT Policies and Procedure Manual.' as details ,case when formA1 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA1 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select '2.Customer Identification (If customer is not a natural person, proceed to f below)' as details ,case when null = 'TRUE' then 'YES' else '' end as optionyes ,case when null = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'a. Is the applicant a resident?' as details ,case when formA2 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA2 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'a.1. If Yes, did the applicant submit the following which are valid and verifiable?' as details ,case when null = 'TRUE' then 'YES' else '' end as optionyes ,case when null = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'i. RMI Identification Card' as details ,case when formA3 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA3 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'ii. Drivers License' as details ,case when formA4 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA4 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'iii. SS ID ' as details ,case when formA5 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA5 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'a.2. If no, did the applicant submit the following which are valid and verifiable?' as details ,case when null = 'TRUE' then 'YES' else '' end as optionyes ,case when null = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'i. Copy of the first two pages of the applicants passport' as details ,case when formA6 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA6 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'ii. Drivers License / SS ID' as details ,case when formA7 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA7 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'iii. Working Permit & Alien Registration Certificate' as details ,case when formA8 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA8 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'iv. Copy of the applicants contract assuring employment for at least 2 years' as details ,case when formA9 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA9 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'a.3. If a previous customer, are there doubts as to the veracity or adequacy of previously obtained identification data on the person?' as details ,case when formA10 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA10 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'a.4. If a previous customer, are the customer identification requirement as enumerated in a.1 or a.2 above used to update customer information?' as details ,case when formA11 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA11 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'b. Has the application form properly filled out to show the following personal information?' as details ,case when null = 'TRUE' then 'YES' else '' end as optionyes ,case when null = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'a. Full name' as details ,case when formA12 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA12 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'b. Date of birth' as details ,case when formA13 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA13 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'c. National ID/Passport number' as details ,case when formA14 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA14 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'd. Country' as details ,case when formA15 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA15 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'e. Permanent address' as details ,case when formA16 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA16 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'f. Contact number' as details ,case when formA17 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA17 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'c. Are the information given in a.1 and a.2 above the same as the information in the application form?' as details ,case when formA18 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA18 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'd. Does the customer have name/s other than what is shown in the Passport/IDs presented?' as details ,case when formA19 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA19 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'If yes, what other name/s is the applicant known for? State below.' as details ,case when formA20 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA20 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select '' || coalesce(formA20,'') as details ,null as optionyes ,null as optionno from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'e. Is the customer represented by another person?'as details ,case when formA21 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA21 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'If yes, has a valid power of attorney been submitted?' as details ,case when formA22 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA22 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'f.Please check the type of organization the applicant belongs to:' as details ,case when null = 'TRUE' then 'YES' else '' end as optionyes ,case when null = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'Corporation' as details ,case when formA23 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA23 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'Partnership',case when formA24 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA24 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'If a corporation, have the following been submitted?' as details ,case when null = 'TRUE' then 'YES' else '' end as optionyes ,case when null = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'i. Articles of Incorporation' as details ,case when formA25 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA25 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'ii. Members of the Board of Directors and their addresses' as details ,case when formA26 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA26 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'iii. Board Resolution/Secretarys Certificate authorizing the loan and identifying the person authorizing to represent the corporation' as details ,case when formA27 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA27 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'If a partnership, have the following been submitted?' as details ,case when null = 'TRUE' then 'YES' else '' end as optionyes ,case when null = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'i. Certificate of Partnership' as details ,case when formA28 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA28 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'ii. Names of partners with their corresponding ownership interest in percent' as details ,case when formA29 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA29 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'iii. Name/s of managing partner/s' as details ,case when formA30 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA30 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'iv. Partners agreement showing authorization of the loan and the person authorized to act for and on behalf of the partnership' as details ,case when formA31 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA31 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'g. Is the applicant the beneficial owner of the proceeds of the loan being applied for?' as details ,case when formA32 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA32 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'h. Is the beneficial owner residing in a high risk jurisdiction?' as details ,case when formA33 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA33 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'i. Was there an instance when the applicant had been suspected of money laundering and/or financing of terrorism?' as details ,case when formA34 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA34 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select '3. AML/CFT Risk Assessment' as details ,case when null = 'TRUE' then 'YES' else '' end as optionyes ,case when null = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'a. Is the applicant involved in a complex business structure with no legitimate commercial rationlae?' as details ,case when formA35 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA35 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'b. Is the customer in the position which may expose them to the possibility of corruption?' as details ,case when formA36 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA36 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'c. Is the source of loan payment difficult to verify?' as details ,case when formA37 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA37 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}
+union all
+select 'd. Is the total amount of loan (Interest plus Principal) more than $10,000?' as details ,case when formA38 = 'TRUE' then 'YES' else '' end as optionyes ,case when formA38 = 'FALSE' then 'NO' else '' end as optionno  from credit_investigation where cast(id as bigint) = $P{id}]]>
+	</queryString>
+	<field name="details" class="java.lang.String"/>
+	<field name="optionyes" class="java.lang.String"/>
+	<field name="optionno" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="13">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="510" y="0" width="30" height="13" uuid="c85ce7dd-d140-4ad4-81bd-2189823d8d9e"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["YES"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="540" y="0" width="30" height="13" uuid="6b373caa-e01f-4c10-ae8c-6ef86ceccbe9">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["NO"]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="460" height="13" uuid="5dfbc59a-7a77-4218-8fb4-946f011be3a9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+					<paragraph leftIndent="5" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{details}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="510" y="0" width="30" height="13" uuid="c851f4b3-5ff0-40a3-b1ef-fec377f53dd0"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{optionyes}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToTallestObject" x="540" y="0" width="30" height="13" uuid="5588d3cb-bff2-4840-8062-47f4c5b9dc4e"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{optionno}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

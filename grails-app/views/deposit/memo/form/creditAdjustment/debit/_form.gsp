@@ -1,0 +1,137 @@
+<!--
+  To change this license header, choose License Headers in Project Properties.
+  To change this template file, choose Tools | Templates
+  and open the template in the editor.
+-->
+
+<%@ page contentType="text/html;charset=UTF-8" %>
+<div class="row">
+    <div class="col-md-6">
+        <g:hiddenField id="txnType" name="tnxType.id" value="9"/>
+        <g:hiddenField id="acct"name="acct.id" value="${adjustmentInstance?.acct?.id?:depositInstance?.id}"/>
+        <div class="form-group fieldcontain ${hasErrors(bean: adjustmentInstance, field: 'type', 'has-error')} ">
+            <label class="control-label col-sm-4"for="type">
+                    <g:message code="adjustment.type.label" default="Memo Type" />
+            </label>
+            <div class="col-sm-8">
+                <g:select id="type" name="type.id" onchange="changeMemoForm('adjustment')" from="${icbs.lov.MemoType.findAllByStatus(true)}" optionKey="id" optionValue ="description" value="1"class="form-control"/>
+                <g:hasErrors bean="${adjustmentInstance}" field="type">
+                    <div class="controls">
+                        <span class="help-block">
+                            <g:eachError bean="${adjustmentInstance}" field="type">
+                                <g:message error="${it}" /><br/>
+                            </g:eachError>
+                        </span>
+                    </div>
+                </g:hasErrors>
+            </div>
+        </div>
+        <div class="form-group fieldcontain ${hasErrors(bean: adjustmentInstance, field: 'txnTemplate', 'has-error')} ">
+            <label class="control-label col-sm-4"for="txnTemplate">
+                    <g:message code="adjustment.txnTemplate.label" default="Transaction Code" />
+            </label>
+            <div class="col-sm-8">
+                <g:select id="txnTemplate" name="txnTemplate.id" from="${icbs.admin.TxnTemplate.findAllByTxnType(icbs.lov.TxnType.read(7))}" optionKey="id" optionValue ="description" value="${adjustmentInstance?.txnTemplate?.id}"class="many-to-one form-control"/>
+                <g:hasErrors bean="${adjustmentInstance}" field="txnTemplate">
+                    <div class="controls">
+                        <span class="help-block">
+                            <g:eachError bean="${adjustmentInstance}" field="txnTemplate">
+                                <g:message error="${it}" /><br/>
+                            </g:eachError>
+                        </span>
+                    </div>
+                </g:hasErrors>
+            </div>
+        </div>
+        <div class="form-group fieldcontain ${hasErrors(bean: adjustmentInstance, field: 'amt', 'has-error')} ">
+            <label class="control-label col-sm-4"for="amt">
+                    <g:message code="adjustment.amt.label" default="Amount" /><span class="required-indicator"> *</span>
+            </label>
+            <div class="col-sm-8">
+                <g:textField id="AdjustDebitAmt" name="amt" value="${adjustmentInstance?.amt}" class="form-control truncated"/>
+                <g:hasErrors bean="${adjustmentInstance}" field="amt">
+                    <div class="controls">
+                        <span class="help-block">
+                            <g:eachError bean="${adjustmentInstance}" field="amt">
+                                <g:message error="${it}" /><br/>
+                            </g:eachError>
+                        </span>
+                    </div>
+                </g:hasErrors>
+            </div>
+        </div>
+        <div class="form-group fieldcontain ${hasErrors(bean: adjustmentInstance, field: 'txnRef', 'has-error')} ">
+            <label class="control-label col-sm-4"for="amt">
+                    <g:message code="adjustment.txnRef.label" default="Transaction Reference" /><span class="required-indicator"> *</span>
+            </label>
+            <div class="col-sm-8">
+                <g:textField id="AdjustDebitRef" name="txnRef" value="${adjustmentInstance?.txnRef}" class="form-control"/>
+                <g:hasErrors bean="${adjustmentInstance}" field="txnRef">
+                    <div class="controls">
+                        <span class="help-block">
+                            <g:eachError bean="${adjustmentInstance}" field="txnRef">
+                                <g:message error="${it}" /><br/>
+                            </g:eachError>
+                        </span>
+                    </div>
+                </g:hasErrors>
+            </div>
+        </div>
+        <div class="form-group fieldcontain ${hasErrors(bean: adjustmentInstance, field: 'txnDescription', 'has-error')} ">
+            <label class="control-label col-sm-4"for="ref">
+                    <g:message code="adjustment.txnDescription.label" default="Description" />
+            </label>
+            <div class="col-sm-8">
+                <g:textField name="txnDescription" value="${adjustmentInstance?.txnDescription}" class="form-control"/>
+                <g:hasErrors bean="${adjustmentInstance}" field="txnDescription">
+                    <div class="controls">
+                        <span class="help-block">
+                            <g:eachError bean="${adjustmentInstance}" field="txnDescription">
+                                <g:message error="${it}" /><br/>
+                            </g:eachError>
+                        </span>
+                    </div>
+                </g:hasErrors>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <g:submitButton name="submit" class="btn btn-primary" id="submitFrmAdjust1" style="display:none"/>
+        <button  class="btn btn-primary" id="submitFrmAdjustDebit">  Submit  </button>
+        <script>
+            $('#submitFrmAdjustDebit').on('click',function(f){
+            f.preventDefault();
+          
+//            if(!$('#type').val()){
+//                notify.message('Memo type is required!|error|alert');return;   
+//            }
+//            if(!$('#txnTemplate').val()){
+//                notify.message('Transaction code is required!|error|alert');return;   
+//            }
+            if(!$('#AdjustDebitAmt').val()){
+                notify.message('Amount is required!|error|alert');return;   
+            }
+            if(!$('#AdjustDebitRef').val()){
+                notify.message('Transaction reference is required!|error|alert');return;   
+            }
+            
+            alertify.confirm(AppTitle,'Are you sure you want to continue this transaction?',
+            function(){
+                $('#submitFrmAdjust1').click();
+            },
+            function(){
+                return;
+            });
+          
+            });   
+         </script>
+         <g:if test="${flash.message == "Memo Adjustment successfully made.|success|alert"}">
+            <a class="btn btn-primary" onclick="alertify.confirm(AppTitle,'Print Memo Transaction - (Debit Adjustment) Validation Slip?',
+               function(){
+                   var w = window.open('/icbs/deposit/MemoTransactionValidationSlip', '_blank');
+                       w.print()
+                   },
+               function(){});">Validation</a>
+         </g:if>
+    </div>
+</div>

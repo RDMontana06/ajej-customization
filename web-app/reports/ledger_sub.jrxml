@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ledger_sub" pageWidth="950" pageHeight="612" orientation="Landscape" columnWidth="930" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" uuid="21566194-4a4f-4898-9162-fa55e6f5c890">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sample DB"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="name" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select 	C.display_name,
+	case when K1.principal_balance is null then 0  else K1.principal_balance end  as last_prin_bal,
+	case when K1.interest_balance is null then 0  else K1.interest_balance end as int_bal,
+	case when K1.penalty_balance is null then 0  else K1.penalty_balance end as pen_bal,	
+	F.principal_installment_amount,
+	F.interest_installment_amount,
+	F.penalty_installment_amount
+from loan A
+inner join customer C on C.id = A.customer_id
+inner join loan_ledger K1 on K1.loan_id = A.id
+left join loan_loan_installment G on G.loan_loan_installments_id = A.id
+left join loan_installment F on F.id = G.loan_installment_id
+where A.id = $P{name} and F.sequence_no = 1
+order by K1.id DESC
+limit 1]]>
+	</queryString>
+	<field name="display_name" class="java.lang.String"/>
+	<field name="last_prin_bal" class="java.lang.Double"/>
+	<field name="int_bal" class="java.lang.Double"/>
+	<field name="pen_bal" class="java.lang.Double"/>
+	<field name="principal_installment_amount" class="java.lang.Double"/>
+	<field name="interest_installment_amount" class="java.lang.Double"/>
+	<field name="penalty_installment_amount" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="86" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="11" width="100" height="15" uuid="aa7ddd8c-6086-40f0-9aa1-e0c74a3dcdea">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Summary : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="39" width="110" height="15" uuid="8e47a83d-d095-43d6-957b-7ff9f74314b3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Principal Balance :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="54" width="110" height="15" uuid="f394211e-5272-4625-9415-fc1a49339da8">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interest Balance   :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="70" width="110" height="15" uuid="cc6981f2-3f54-43c9-a8dc-82be2d841d82">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Penalty Balance   :]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="140" y="39" width="141" height="13" uuid="247b5979-20ac-4a02-8362-79770c266d1d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{last_prin_bal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="140" y="54" width="141" height="13" uuid="e47188f0-a2ab-415a-9edd-62d9ce0f9aea">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{int_bal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="140" y="70" width="141" height="13" uuid="51009c07-6d96-473f-b338-61e9910caa5a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pen_bal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="527" y="12" width="153" height="15" uuid="b8f733ba-b080-4240-ab17-b205ecf00412">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monthly Amortization Due : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="547" y="40" width="127" height="15" uuid="0b1ea7f4-f3f4-4ba4-9561-b3f22c659d77">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Principal Installment:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="547" y="55" width="127" height="15" uuid="be7ee2f8-49fd-4ed3-8cae-96da14d59ef7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Interest Intallment:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="547" y="71" width="127" height="15" uuid="6718dc8d-fc05-4008-aad3-ffa1be1d3f53">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Penalty Intallment:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="674" y="40" width="78" height="13" uuid="89339d73-c5c9-4e18-b39e-e02c47a24dca"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{principal_installment_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="674" y="71" width="78" height="13" uuid="0c393218-37ce-4e3f-a12c-18186004c6e1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{penalty_installment_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="674" y="56" width="78" height="13" uuid="962ed84a-d01d-4069-9254-466254a17831"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{interest_installment_amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

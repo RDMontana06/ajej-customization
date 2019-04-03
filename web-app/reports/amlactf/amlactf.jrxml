@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-12-02T12:35:01 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="amlactf" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e17ee904-ecc1-4aa0-835d-f8d81c52bea8">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="LocalHost"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="id" class="java.lang.String"/>
+	<parameter name="resourcepath" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select 
+(select param_value from institution where param_code='GEN.10000') as institution,
+(select address from branch where loan_application.branch_id = branch.id) as br_address,
+(select run_date from branch where loan_application.branch_id = branch.id) as run_date,
+credit_investigation.id,
+loan_application.customer_id,
+cif_basic_info.cont_name
+
+from credit_investigation 
+inner join loan_application on loan_application.id = credit_investigation.loan_application_id
+inner join cif_basic_info on cif_basic_info.id = loan_application.customer_id
+where 
+	trim(to_char(credit_investigation.id,'9999999')) =  $P{id}
+]]>
+	</queryString>
+	<field name="institution" class="java.lang.String"/>
+	<field name="br_address" class="java.lang.String"/>
+	<field name="run_date" class="java.sql.Timestamp"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="customer_id" class="java.lang.Integer"/>
+	<field name="cont_name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="69" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="50" width="572" height="15" uuid="70708eaa-964d-4009-8696-617682d45c87">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AML/CFT COMPLIANCE SHEET]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="0" width="572" height="18" uuid="bdd13cbb-8268-416c-bff5-0c806db7f90f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="15" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{institution}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="18" width="572" height="16" uuid="74ea44d3-af0e-44c9-86bb-71a958c64d07">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{br_address}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="209" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="572" height="13" uuid="c8d5d5f2-a702-47b6-b33a-afdd0dacae44">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Name of Applicant: " + $F{cont_name}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="20" width="572" height="20" uuid="6ed3d3f8-c661-46de-8062-0cce1c1908f4"/>
+				<subreportParameter name="id">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{resourcepath} +"/reports/amlactf/amlactf_subreport.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement positionType="Float" x="0" y="50" width="572" height="13" uuid="2c094ea3-2506-4876-ad57-9e50b4814e9c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Action taken by AML/CFT CO: "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="96" width="572" height="13" uuid="3388e533-08d0-49d5-8d16-f1546abaea35">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Recommended for loan processing: "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="142" width="572" height="13" uuid="f04bb719-b6a1-4af7-a02e-713040822f62">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Recommend approval of the Chairman of the Board of Directors prior to loan processing: "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="0" y="190" width="572" height="13" uuid="4368f1d0-b6a8-4008-bfeb-7d5fdfc8b6e6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Loan application should be denied as applicant is in high risk category with regards to AML/FT: (name of GM/Officer)"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>
